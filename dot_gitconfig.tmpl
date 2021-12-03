@@ -1,0 +1,39 @@
+[user]
+    name = Norman Heino
+    email = {{ .email }}
+
+[color]
+    diff = auto
+    status = auto
+    branch = auto
+
+[branch "master"]
+    remote = origin
+    merge  = master
+
+[alias]
+    st = status
+    ci = commit
+    co = checkout
+    serve = daemon --export-all
+
+[difftool]
+    prompt = false
+
+[push]
+    default = current
+
+[pull]
+	rebase = true
+
+[core]
+	excludesFile = ~/.gitignore
+
+[init]
+	defaultBranch = main
+
+[diff]
+	tool = meld
+
+[merge]
+	tool = meld
