@@ -1,0 +1,147 @@
+export EDITOR='nvim'
+export PAGER='less'
+export FZF_DEFAULT_COMMAND='rg --files-with-matches ""'
+export FZF_DEFAULT_OPTS='
+    --color fg:-1,fg+:7,bg:-1,bg+:0,hl:4,hl+:-1
+    --color info:-1,prompt:-1,spinner:-1,pointer:-1,marker:-1
+'
+
+export VAULT_ADDR='https://vault.linguee.internal'
+export ANSIBLE_BECOME_ASK_PASS=False
+export DEEPL_USER=nhzhssh
+
+setopt histignorealldups incappendhistory sharehistory histreduceblanks histignorespace
+
+setopt autocd
+cdpath=($HOME/deepl)
+
+DIRSTACKSIZE=8
+setopt autopushd pushdminus pushdsilent pushdtohome
+
+# Keep N lines of history within the shell and save it to ~/.zsh_history
+HISTSIZE=16384
+SAVEHIST=16384
+HISTFILE=~/.zsh_history
+
+# Vim keybindings for zle
+bindkey -v
+# Shorter timeout when switching to normal mode
+export KEYTIMEOUT=10
+# Still use Emacs bindings for history search
+bindkey '^r' history-incremental-search-backward
+# bindkey ';5C' forward-word
+# bindkey ';5D' backward-word
+# WORDCHARS='*?.[]~&!#$%^(){}<>'
+alias pacman='pacman --color=auto'
+alias tmux='tmux -u'
+
+darwin_init() {
+    chflags nohidden ~/Library/
+    export CLICOLOR=1
+    export LSCOLORS='exfxcxdxbxegedabagacad'
+    typeset -U fpath
+    fpath=(/usr/share/zsh-completions $fpath)
+    chflags nohidden ~/Library
+}
+
+set_cursor_for_mode() {
+    if [[ "$1" == "main" ]]; then
+        gconftool-2 --type string --set /apps/gnome-terminal/profiles/Default/cursor_shape ibeam
+    else
+        gconftool-2 --type string --set /apps/gnome-terminal/profiles/Default/cursor_shape block
+    fi
+}
+
+foreground-nvim() {
+    fg %nvim
+}
+
+linux_init() {
+    export -TU LD_LIBRARY_PATH ldlibrarypath
+    ldlibrarypath=($ldlibrarypath /usr/local/lib)
+
+    path=(~/.local/bin $path)
+    path=(~/.cargo/bin $path)
+
+    # Spark
+    path=(/opt/apache-spark/bin /opt/apache-spark/sbin $path)
+
+    eval "$(dircolors ~/.dircolors)"
+
+    alias ls='ls --color=auto'
+    alias grep='grep --color=auto'
+    alias ssh='TERM=xterm ssh'
+    alias open='xdg-open > /dev/null 2>&1'
+    alias cre='/usr/bin/http --auth-type c1-auth -a'
+
+    # zle-keymap-select() { set_cursor_for_mode $KEYMAP; }
+    # zle -N zle-keymap-select zle-line-init
+
+    # zle-line-init() { set_cursor_for_mode $KEYMAP; }
+    # zle -N zle-line-init
+}
+
+system_name=$(uname -s)
+if [[ "$system_name" == "Darwin" ]]; then
+    darwin_init
+elif [[ "$system_name" == "Linux" ]]; then
+    linux_init
+fi
+
+# Generic alias definitions
+alias gti=git
+alias ll=' ls -ahlF'
+alias la=' ls -A'
+alias l=' ls -CF'
+alias c=' reset && clear'
+# alias ag="ag --pager '$PAGER'"
+# alias agt="ag --tex --pager '$PAGER'"
+# alias agp="ag --python --pager '$PAGER'"
+# alias agc="ag --cpp --pager '$PAGER'"
+alias jq='jq -r'
+
+# Load color definition shortcuts
+autoload -Uz colors && colors
+
+# Use modern completion system
+autoload -Uz compinit && compinit
+
+zstyle ':completion:*' auto-description 'specify: %d'
+zstyle ':completion:*' completer _expand _complete _correct _approximate
+zstyle ':completion:*:approximate:*' max-errors 3
+zstyle ':completion:*' format 'Completing %d'
+zstyle ':completion:*' group-name ''
+zstyle ':completion:*' menu select=1
+zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
+zstyle ':completion:*' list-colors ''
+zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character to insert%s
+zstyle ':completion:*' use-compctl false
+zstyle ':completion:*' verbose true
+
+zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
+zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
+
+zstyle ':completion:*:messages' format '%F{2} -- %d -- %F{14}'
+zstyle ':completion:*:messages' format "%F{2} -- %d -- %F{14}"
+zstyle ':completion:*:warnings' format "%F{1} -- no matches found -- %F{14}"
+zstyle ':completion:*:descriptions' format "%F{2} -- %d -- %F{14}"
+zstyle ':completion:*:corrections' format "%F{2} -- %d -- %F{14}"
+
+source <(kubectl completion zsh)
+
+autoload -Uz vcs_info
+autoload -Uz promptinit && promptinit
+setopt prompt_subst
+zstyle ':vcs_info:*' enable git hg svn
+zstyle ':vcs_info:*' formats       '%F{14}[%F{4}%b%F{14}]%f'
+zstyle ':vcs_info:*' actionformats '%F{14}[%F{4}%b%F{14}%F{14}] (%F{9}%a%F{14})%f'
+
+precmd () { vcs_info }
+PROMPT="%F{6}%~%F{14} %# "
+RPROMPT='${vcs_info_msg_0_}'
+
+zle -N foreground-nvim
+bindkey '^Z' foreground-nvim
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+[ -f ~/.pyenv.zsh ] && source ~/.pyenv.zsh
