@@ -1,0 +1,112 @@
+font_family         Iosevka Fixed Slab Medium
+bold_font           Iosevka Fixed Slab Semibold
+italic_font         Iosevka Fixed Slab Medium Italic
+bold_italic_font    Iosevka Fixed Slab Semibold Italic
+
+font_features       Iosevka-Fixed-Slab-Medium cv82=2 cv90=3 cv91=1 cv98=3
+
+{{- if (eq .chezmoi.os "darwin") }}
+font_size 18.0
+
+initial_window_width  100c
+initial_window_height 42c
+{{- else if (eq .chezmoi.os "linux") }}
+font_size 12.0
+{{- end }}
+
+remember_window_size  no
+disable_ligatures always
+
+{{- $base03 := "#002b36" }}
+{{- $base02 := "#073642" }}
+{{- $base01 := "#586e76" }}
+{{- $base00 := "#657b83" }}
+{{- $base0 := "#839496" }}
+{{- $base1 := "#93a1a1" }}
+{{- $base2 := "#eee8d5" }}
+{{- $base3 := "#fdf6e3" }}
+{{- $yellow := "#b58900" }}
+{{- $orange := "#cb4b16" }}
+{{- $red := "#dc322f" }}
+{{- $magenta := "#d33682" }}
+{{- $violet := "#6c71c4" }}
+{{- $blue := "#268bd2" }}
+{{- $cyan := "#2aa198" }}
+{{- $green := "#859900" }}
+
+background {{ $base03 }}
+foreground {{ $base0 }}
+
+color8  {{ $base03 }}
+color0  {{ $base02 }}
+color10 {{ $base01 }}
+color11 {{ $base00 }}
+color12 {{ $base0 }}
+color14 {{ $base1 }}
+color7  {{ $base2 }}
+color15 {{ $base3 }}
+color3  {{ $yellow }}
+color9  {{ $orange }}
+color1  {{ $red }}
+color5  {{ $magenta }}
+color13 {{ $violet }}
+color4  {{ $blue }}
+color6  {{ $cyan }}
+color2  {{ $green }}
+
+active_border_color     {{ $yellow }}
+inactive_border_color   {{ $yellow }}
+bell_border_color       {{ $red }}
+cursor                  {{ $base1 }}
+cursor_text_color       background
+selection_foreground    {{ $base03 }}
+selection_background    {{ $base0 }}
+active_tab_foreground   {{ $base03 }}
+active_tab_background   {{ $base1 }}
+inactive_tab_foreground {{ $base02 }}
+inactive_tab_background {{ $base01 }}
+
+window_border_width 0.5pt
+draw_minimal_borders yes
+hide_window_decorations no
+
+tab_bar_style fade
+
+{{- if eq .chezmoi.os "darwin" }}
+shell /bin/zsh
+editor /opt/homebrew/bin/nvim
+
+resize_draw_strategy size
+{{- else if eq .chezmoi.os "linux" }}
+shell /usr/bin/zsh
+editor /usr/bin/nvim
+
+resize_draw_strategy static
+{{- end }}
+
+map cmd+enter launch --location=vsplit
+map cmd+shift+enter launch --location=hsplit
+
+map cmd+h neighboring_window left
+map cmd+l neighboring_window right
+map cmd+k neighboring_window up
+map cmd+j neighboring_window down
+
+map cmd+shift+h move_window left
+map cmd+shift+l move_window right
+map cmd+shift+k move_window up
+map cmd+shift+j move_window down
+
+enabled_layouts splits
+enable_audio_bell no
+
+detect_urls no
+
+{{- if (eq .chezmoi.os "linux") }}
+map super+t new_tab
+map super+w close_tab
+{{- end }}
+
+map super+ctrl+h previous_tab
+map super+ctrl+l next_tab
+map super+ctrl+t set_tab_title
