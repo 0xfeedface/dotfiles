@@ -6,14 +6,16 @@ export FZF_DEFAULT_OPTS='
     --color info:-1,prompt:-1,spinner:-1,pointer:-1,marker:-1
 '
 
+setopt histignorealldups incappendhistory sharehistory histreduceblanks histignorespace
+
+{{ if (eq .chezmoi.hostname "thinkpad") }}
 export VAULT_ADDR='https://vault.linguee.internal'
 export ANSIBLE_BECOME_ASK_PASS=False
 export DEEPL_USER=nhzhssh
 
-setopt histignorealldups incappendhistory sharehistory histreduceblanks histignorespace
-
 setopt autocd
 cdpath=($HOME/deepl)
+{{ end }}
 
 DIRSTACKSIZE=8
 setopt autopushd pushdminus pushdsilent pushdtohome
@@ -32,61 +34,27 @@ bindkey '^r' history-incremental-search-backward
 # bindkey ';5C' forward-word
 # bindkey ';5D' backward-word
 # WORDCHARS='*?.[]~&!#$%^(){}<>'
-alias pacman='pacman --color=auto'
-alias tmux='tmux -u'
 
-darwin_init() {
-    chflags nohidden ~/Library/
-    export CLICOLOR=1
-    export LSCOLORS='exfxcxdxbxegedabagacad'
-    typeset -U fpath
-    fpath=(/usr/share/zsh-completions $fpath)
-    chflags nohidden ~/Library
-}
+{{ if (eq .chezmoi.os "linux") }}
+export -TU LD_LIBRARY_PATH ldlibrarypath
+ldlibrarypath=($ldlibrarypath /usr/local/lib)
 
-set_cursor_for_mode() {
-    if [[ "$1" == "main" ]]; then
-        gconftool-2 --type string --set /apps/gnome-terminal/profiles/Default/cursor_shape ibeam
-    else
-        gconftool-2 --type string --set /apps/gnome-terminal/profiles/Default/cursor_shape block
-    fi
-}
+path=(~/.local/bin $path)
+path=(~/.cargo/bin $path)
 
-foreground-nvim() {
-    fg %nvim
-}
+eval "$(dircolors ~/.dircolors)"
 
-linux_init() {
-    export -TU LD_LIBRARY_PATH ldlibrarypath
-    ldlibrarypath=($ldlibrarypath /usr/local/lib)
-
-    path=(~/.local/bin $path)
-    path=(~/.cargo/bin $path)
-
-    # Spark
-    path=(/opt/apache-spark/bin /opt/apache-spark/sbin $path)
-
-    eval "$(dircolors ~/.dircolors)"
-
-    alias ls='ls --color=auto'
-    alias grep='grep --color=auto'
-    alias ssh='TERM=xterm ssh'
-    alias open='xdg-open > /dev/null 2>&1'
-    alias cre='/usr/bin/http --auth-type c1-auth -a'
-
-    # zle-keymap-select() { set_cursor_for_mode $KEYMAP; }
-    # zle -N zle-keymap-select zle-line-init
-
-    # zle-line-init() { set_cursor_for_mode $KEYMAP; }
-    # zle -N zle-line-init
-}
-
-system_name=$(uname -s)
-if [[ "$system_name" == "Darwin" ]]; then
-    darwin_init
-elif [[ "$system_name" == "Linux" ]]; then
-    linux_init
-fi
+alias ls='ls --color=auto'
+alias grep='grep --color=auto'
+alias open='xdg-open > /dev/null 2>&1'
+{{ else if (eq .chezmoi.os "darwin") }}
+chflags nohidden ~/Library/
+export CLICOLOR=1
+export LSCOLORS='exfxcxdxbxegedabagacad'
+typeset -U fpath
+fpath=(/usr/share/zsh-completions $fpath)
+chflags nohidden ~/Library
+{{ end }}
 
 # Generic alias definitions
 alias gti=git
@@ -94,11 +62,12 @@ alias ll=' ls -ahlF'
 alias la=' ls -A'
 alias l=' ls -CF'
 alias c=' reset && clear'
-# alias ag="ag --pager '$PAGER'"
-# alias agt="ag --tex --pager '$PAGER'"
-# alias agp="ag --python --pager '$PAGER'"
-# alias agc="ag --cpp --pager '$PAGER'"
-alias jq='jq -r'
+alias cm='chezmoi'
+alias tmux='tmux -u'
+
+{{ if (eq (index .chezmoi.osRelease "id") "arch") }}
+alias pacman='pacman --color=auto'
+{{ end }}
 
 # Load color definition shortcuts
 autoload -Uz colors && colors
@@ -127,7 +96,9 @@ zstyle ':completion:*:warnings' format "%F{1} -- no matches found -- %F{14}"
 zstyle ':completion:*:descriptions' format "%F{2} -- %d -- %F{14}"
 zstyle ':completion:*:corrections' format "%F{2} -- %d -- %F{14}"
 
+{{ if (eq .chezmoi.hostname "thinkpad") }}
 source <(kubectl completion zsh)
+{{ end }}
 
 autoload -Uz vcs_info
 autoload -Uz promptinit && promptinit
@@ -139,9 +110,6 @@ zstyle ':vcs_info:*' actionformats '%F{14}[%F{4}%b%F{14}%F{14}] (%F{9}%a%F{14})%
 precmd () { vcs_info }
 PROMPT="%F{6}%~%F{14} %# "
 RPROMPT='${vcs_info_msg_0_}'
-
-zle -N foreground-nvim
-bindkey '^Z' foreground-nvim
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 [ -f ~/.pyenv.zsh ] && source ~/.pyenv.zsh
