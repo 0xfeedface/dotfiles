@@ -1,0 +1,451 @@
+if exists('g:vscode')
+    finish
+endif
+
+let g:python3_host_prog='/usr/bin/python'
+let g:loaded_python_provider=0
+let g:loaded_ruby_provider=0
+let g:loaded_perl_provider=0
+let g:loaded_node_provider=0
+
+"----------------------------------------------------------------------------
+" Plug-ins
+"----------------------------------------------------------------------------
+
+" Only for solarized-vim
+let g:solarized_contrast='normal'
+let g:solarized_visibility='low'
+" Only for solarized-lua
+let g:solarized_italics=0
+
+let g:neosolarized_contrast='high'
+let g:neosolarized_visibility='low'
+let g:neosolarized_bold=0
+let g:neosolarized_italic=1
+
+let g:gruvbox_contrast_dark='medium'
+let g:gruvbox_italicize_comments=0
+let g:gruvbox_bold=0
+
+" Single space after comment character
+let g:NERDSpaceDelims=1
+let g:NERDCustomDelimiters = {'c': {'left': '//'}}
+
+let g:airline_powerline_fonts=1
+let g:airline#extensions#whitespace#mixed_indent_algo=1
+
+let g:tmpl_search_paths=['~/.local/share/nvim/templates']
+
+let c_no_curly_error=1
+
+set completeopt=menu,menuone,noselect
+
+call plug#begin()
+  " Color schemes
+  Plug '~/other/NeoSolarized'
+  " Plug 'morhetz/gruvbox'
+  " Plug 'rktjmp/lush.nvim' " required by gruvbox
+  " Plug 'ellisonleao/gruvbox.nvim'
+
+  " Lua Neovim plug-ins
+  Plug 'nvim-lua/plenary.nvim'
+  Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+  Plug 'nvim-treesitter/playground'
+  Plug 'nvim-treesitter/nvim-treesitter-textobjects'
+  Plug 'nvim-telescope/telescope.nvim'
+  Plug 'nvim-telescope/telescope-fzy-native.nvim'
+  Plug 'neovim/nvim-lspconfig'
+  Plug 'numToStr/Comment.nvim'
+  Plug 'hrsh7th/cmp-nvim-lsp'
+  Plug 'hrsh7th/nvim-cmp'
+  Plug 'jose-elias-alvarez/null-ls.nvim'
+
+  " Classic Vim plug-ins
+  Plug 'bkad/CamelCaseMotion'
+  Plug 'rhysd/vim-clang-format'
+  " Plug 'jiangmiao/auto-pairs'
+  Plug 'tibabit/vim-templates'
+  Plug 'ziglang/zig.vim'
+
+  Plug 'vim-airline/vim-airline'
+  Plug 'vim-airline/vim-airline-themes'
+
+  Plug 'junegunn/vim-easy-align'
+
+  Plug 'tpope/vim-endwise'
+  Plug 'tpope/vim-eunuch'
+  Plug 'tpope/vim-fugitive'
+  Plug 'tpope/vim-scriptease'
+  Plug 'tpope/vim-surround'
+call plug#end()
+
+lua <<EOF
+require'nvim-treesitter.configs'.setup {
+  ensure_installed = { 'cpp', 'python', 'vim', 'lua' },
+  highlight = {
+    enable = true,
+    custom_captures = {
+      ['keyword.auto'] = 'Type'
+    }
+  },
+  incremental_selection = { enable = true },
+  indent = { enable = false },
+}
+
+require'Comment'.setup()
+
+require'telescope'.setup {
+  extensions = {
+    fzy_native = {
+      override_generic_sorter = false,
+      override_file_sorter = true,
+    }
+  }
+}
+require'telescope'.load_extension'fzy_native'
+EOF
+
+lua <<EOF
+local cmp = require'cmp'
+cmp.setup({
+    sources = {
+        { name = 'nvim_lsp' },
+        -- { name = 'buffer' },
+    },
+    experimental = {
+    }
+})
+EOF
+
+lua <<EOF
+local set_mappings = function (client, bufnr)
+  vim.api.nvim_buf_set_keymap(bufnr, 'n' , 'gd', '<cmd>lua vim.lsp.buf.definition()<cr>', { noremap=true })
+  vim.api.nvim_buf_set_keymap(bufnr, 'n' , 'gD', '<cmd>lua vim.lsp.buf.declaration()<cr>', { noremap=true })
+  vim.api.nvim_buf_set_keymap(bufnr, 'n' , 'K', '<cmd>lua vim.lsp.buf.hover()<cr>', { noremap=true })
+  vim.api.nvim_buf_set_keymap(bufnr, 'n' , 'gi', '<cmd>lua vim.lsp.buf.implementation()<cr>', { noremap=true })
+  vim.api.nvim_buf_set_keymap(bufnr, 'n' , 'gs', '<cmd>lua vim.lsp.buf.signature_help()<cr>', { noremap=true })
+  vim.api.nvim_buf_set_keymap(bufnr, 'n' , 'gr', '<cmd>lua vim.lsp.buf.references()<cr>', { noremap=true })
+
+  if client.resolved_capabilities.type_definition == true then
+    vim.api.nvim_buf_set_keymap(bufnr, 'n' , 'gt', '<cmd>lua vim.lsp.buf.type_definition()<cr>', { noremap=true })
+  end
+
+  -- vim.api.nvim_buf_set_keymap(bufnr, 'n' , '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<cr>', { noremap=true })
+
+  if client.resolved_capabilities.document_formatting == true then
+    vim.api.nvim_buf_set_option(bufnr, "formatexpr", "v:lua.vim.lsp.formatexpr()")
+    vim.api.nvim_buf_set_keymap(bufnr, 'n' , 'gQ', '<cmd>lua vim.lsp.buf.formatting()<cr>', { noremap=true })
+  end
+end
+
+local util = require 'lspconfig'.util
+require'lspconfig'.clangd.setup{
+  flags = {
+    debounce_text_changes = 500
+  },
+  root_dir = util.root_pattern('compile_commands.json'),
+  cmd = {
+    'clangd',
+    '--cross-file-rename',
+  },
+  capabilities = {
+    textDocument = {
+      semanticHighLightingCapabilities = {
+        semanticHighLighting = true
+      }
+    }
+  },
+  -- capabilities = clangd_nvim.capabilities,
+  on_attach = function (client, bufnr)
+    -- clangd_nvim.on_attach(client)
+    vim.api.nvim_buf_set_keymap(bufnr, 'n' , '<leader>o', '<cmd>ClangdSwitchSourceHeader<cr>', { noremap=true })
+    set_mappings(client, bufnr)
+  end
+}
+require'lspconfig'.pyright.setup{
+  -- root_dir = util.root_pattern('.'),
+  python = {
+    pythonPath = '/opt/homebrew/bin/python3'
+  },
+  on_attach = function (client, buffnr)
+    set_mappings(client, bufnr)
+  end
+}
+
+require'null-ls'.setup {
+  on_attach = set_mappings,
+  sources = {
+      require'null-ls'.builtins.formatting.yapf
+  },
+}
+EOF
+
+lua <<EOF
+require'nvim-treesitter.configs'.setup {
+  textobjects = {
+    move = {
+      enable = true,
+      set_jumps = true, -- whether to set jumps in the jumplist
+      goto_next_start = {
+        ['+m'] = '@function.outer',
+        ['++'] = '@class.outer',
+      },
+      goto_next_end = {
+        ['+M'] = '@function.outer',
+        ['+ü'] = '@class.outer',
+      },
+      goto_previous_start = {
+        ['üm'] = '@function.outer',
+        ['üü'] = '@class.outer',
+      },
+      goto_previous_end = {
+        ['üM'] = '@function.outer',
+        ['ü+'] = '@class.outer',
+      },
+    },
+  },
+}
+
+require'nvim-treesitter.configs'.setup {
+  textobjects = {
+    lsp_interop = {
+      enable = true,
+      border = 'none',
+      peek_definition_code = {
+        ["<leader>df"] = "@function.outer",
+        ["<leader>dF"] = "@class.outer",
+      },
+    },
+  },
+}
+EOF
+
+call camelcasemotion#CreateMotionMappings(',')
+
+"----------------------------------------------------------------------------
+" Settings
+"----------------------------------------------------------------------------
+
+" Set colors
+set background=dark
+" colorscheme solarized
+colorscheme NeoSolarized
+" colorscheme gruvbox
+
+" Disable line wrapping
+set nowrap
+" Number of columns of context for horizontal scrolling
+set sidescrolloff=2
+
+" Enable filetype plug-ins
+filetype plugin indent on
+
+" Enable syntax highlighting
+syntax on
+
+" Assume true-color terminal
+set termguicolors
+
+" Set leader key
+map <space> <nop>
+let mapleader=' '
+let localleader=' '
+
+" Set default tabbing options
+set tabstop=4
+set softtabstop=4
+set shiftwidth=4
+set expandtab
+
+" <c-t> and <c-a> round to the next shiftwidth
+set shiftround
+
+" Always yank into the system clipboard
+set clipboard+=unnamedplus
+
+" Enable modelines
+set modeline
+
+" Always display a sign column of width 1
+set signcolumn=yes:1
+
+" Enable mouse support
+set mouse=a
+
+" Number formats for <c-a> and <c-x>
+" NeoVim default: bin,hex
+set nrformats=alpha,hex
+
+" Minimum distance of current line from window top or bottom
+set scrolloff=2
+
+" Disable folding
+set nofoldenable
+
+" Highlight current line
+set cursorline
+
+" Highlight the 80-th column
+set colorcolumn=80
+
+" Display line, column number in corner
+set ruler
+
+" Case-insensitive search
+set ignorecase
+
+" Enable relative line numbers
+set relativenumber
+set number
+set numberwidth=5
+
+" Case-sensitive search if at least one Capital letter is used
+set smartcase
+
+" Highlight matching braces
+set showmatch
+
+" Disable bell
+set visualbell
+
+" Reduce NeoVim's verbosity
+set shortmess=I
+
+" Show invisibles
+set list
+" Use the same symbols as TextMate for tabstops and EOLs
+set listchars=nbsp:·,tab:▸\ ,eol:¬
+
+" On vertical split new windows go to the right
+set splitright
+
+" On horizontal split new windows go to below
+set splitbelow
+
+" Allow per-directory .nvimrc
+set exrc
+set secure
+
+" Keep backups
+set backup
+
+" Don't add double spaces when joining sentences
+set nojoinspaces
+
+" Add C++ template delimiters to matched pairs
+set matchpairs+=<:>
+
+" Store backups in one place
+set backupdir=~/.local/share/nvim/backup
+
+" Store swap files in one place
+set dir=~/.local/share/nvim/swap
+
+"----------------------------------------------------------------------------
+" Key mappings
+"----------------------------------------------------------------------------
+
+" Yank to the end of the current line
+map Y y$
+
+" Use CTRL-l instead of Escape
+inoremap <c-b> <esc>
+inoremap <esc> <nop>
+inoremap <c-c> <nop>
+
+" Easier window navigation
+nnoremap <c-j> <c-w><c-j>
+nnoremap <c-k> <c-w><c-k>
+nnoremap <c-l> <c-w><c-l>
+nnoremap <c-h> <c-w><c-h>
+
+" Easier tab navigation
+nnoremap th :tabprev<cr>
+nnoremap tl :tabnext<cr>
+
+" Emulate [[, [], ][, ]] on an ANSI keyboard
+" nnoremap üü [[
+" nnoremap ++ ]]
+" nnoremap ü+ []
+" nnoremap +ü ][
+
+nnoremap <c-n> zL
+nnoremap <c-h> zH
+
+" Toggle background
+nnoremap cob :set background=<c-r>=&background == 'dark' ? 'light' : 'dark'<cr><cr>
+
+" Start interactive EasyAlign in visual mode (e.g. vipga)
+xmap ga <Plug>(EasyAlign)
+" Start interactive EasyAlign for a motion/text object (e.g. gaip)
+nmap ga <Plug>(EasyAlign)
+
+"----------------------------------------------------------------------------
+" Leader mappings
+"----------------------------------------------------------------------------
+
+" Telescope
+nnoremap <leader>ff <cmd>Telescope find_files<cr>
+nnoremap <leader>fg <cmd>Telescope live_grep<cr>
+nnoremap <leader>fb <cmd>Telescope buffers<cr>
+nnoremap <leader>fh <cmd>Telescope help_tags<cr>
+
+" Quick editing of init.vim
+map <leader>vi :call EditVimInit()<cr>
+
+" Toggle search highlighting
+noremap <leader>h  :set hlsearch!<cr>
+
+" Remove trailing whitespace
+nmap <leader>w :call RemoveTrailingWhitespace()<cr>
+
+" Remove DOS line endings
+nmap <leader>m :call RemoveDOSLineEndings()<cr>
+
+" Show syntax highlighting groups for word under cursor
+nmap <leader>p :TSHighlightCapturesUnderCursor<cr>
+
+nmap <leader>d :lua vim.diagnostic.open_float()<cr>
+
+nmap <leader>gb :G blame<cr>
+
+"----------------------------------------------------------------------------
+" Auto commands
+"----------------------------------------------------------------------------
+if (has("autocmd"))
+  " When init.vim is written, reload it
+  autocmd! BufWritePost ~/.config/nvim/init.vim source ~/.config/nvim/init.vim
+
+  autocmd! FileType xml,xslt,css,tex,json,sh,yaml,sql setlocal ts=2 sts=2 sw=2 expandtab
+  autocmd! FileType vim setlocal ts=2 sts=2 sw=2 expandtab
+  autocmd! FileType lua setlocal ts=2 sts=2 sw=2 expandtab
+endif  " autocmd
+
+"----------------------------------------------------------------------------
+" Functions
+"----------------------------------------------------------------------------
+
+" Edit init.vim
+function! EditVimInit()
+  let l:init = expand('~/.config/nvim/init.vim')
+  if bufloaded(l:init)
+    let l:n = bufnr(l:init)
+    :execute 'buffer ' . l:n
+  else
+    if bufname("%") == ""
+      :execute 'edit ' . l:init
+    else
+      :execute 'tabedit ' . l:init
+    endif
+  endif
+endfunc
+
+" Remove trailing whitespace
+function! RemoveTrailingWhitespace()
+  :%s/\s\+$//ge
+endfunction
+
+" Remove DOS line endings
+function! RemoveDOSLineEndings()
+  :%s///g
+endfunction
