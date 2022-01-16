@@ -2,7 +2,12 @@ if exists('g:vscode')
     finish
 endif
 
+{{- if (eq .chezmoi.os "darwin") }}
+let g:python3_host_prog='/opt/homebrew/bin/python3'
+{{- else if (eq .chezmoi.os "linux") }}
 let g:python3_host_prog='/usr/bin/python'
+{{- end }}
+
 let g:loaded_python_provider=0
 let g:loaded_ruby_provider=0
 let g:loaded_perl_provider=0
@@ -42,7 +47,11 @@ set completeopt=menu,menuone,noselect
 
 call plug#begin()
   " Color schemes
+{{- if (eq .chezmoi.os "darwin") }}
+  Plug '~/Code/NeoSolarized'
+{{- else if (eq .chezmoi.os "linux") }}
   Plug '~/other/NeoSolarized'
+{{- end }}
   " Plug 'morhetz/gruvbox'
   " Plug 'rktjmp/lush.nvim' " required by gruvbox
   " Plug 'ellisonleao/gruvbox.nvim'
@@ -165,7 +174,11 @@ require'lspconfig'.clangd.setup{
 require'lspconfig'.pyright.setup{
   -- root_dir = util.root_pattern('.'),
   python = {
+{{- if (eq .chezmoi.os "darwin") }}
     pythonPath = '/opt/homebrew/bin/python3'
+{{- else if (eq .chezmoi.os "linux") }}
+    pythonPath = '/usr/bin/python'
+{{- end }}
   },
   on_attach = function (client, buffnr)
     set_mappings(client, bufnr)
