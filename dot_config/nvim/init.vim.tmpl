@@ -90,7 +90,7 @@ call plug#end()
 
 lua <<EOF
 require'nvim-treesitter.configs'.setup {
-  ensure_installed = { 'cpp', 'python', 'vim', 'lua' },
+  ensure_installed = { 'c', 'cpp', 'python', 'vim', 'lua' },
   highlight = {
     enable = true,
     custom_captures = {
@@ -164,13 +164,14 @@ require'lspconfig'.clangd.setup{
       }
     }
   },
-  -- capabilities = clangd_nvim.capabilities,
   on_attach = function (client, bufnr)
-    -- clangd_nvim.on_attach(client)
+    -- Set clang-specific mapping
     vim.api.nvim_buf_set_keymap(bufnr, 'n' , '<leader>o', '<cmd>ClangdSwitchSourceHeader<cr>', { noremap=true })
     set_mappings(client, bufnr)
+    require'semantic_tokens'.on_attach(client, buffer)
   end
 }
+
 require'lspconfig'.pyright.setup{
   -- root_dir = util.root_pattern('.'),
   python = {
