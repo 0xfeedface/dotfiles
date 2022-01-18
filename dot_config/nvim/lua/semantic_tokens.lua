@@ -1,6 +1,7 @@
 local vim = vim
 local M = {}
 
+-- TODO: get legend from server
 local token_kinds = {
   "Variable",
   "LocalVariable",
@@ -11,6 +12,7 @@ local token_kinds = {
   "Field",
   "StaticField",
   "Class",
+  "Interface",
   "Enum",
   "EnumConstant",
   "Typedef",
@@ -21,7 +23,7 @@ local token_kinds = {
   "Concept",
   "Primitive",
   "Macro",
-  "InactiveCod"
+  "InactiveCode"
 }
 
 local token_kind_to_highlight_group = {
@@ -55,6 +57,7 @@ local token_kind_to_highlight_group = {
   ["Field"] = "Normal",
   ["StaticField"] = "Normal",
   ["Class"] = "Type",
+  ["Interface"] = "Type",
   ["Enum"] = "Type",
   ["EnumConstant"] = "Constant",
   ["Typedef"] = "Typedef",
@@ -63,9 +66,10 @@ local token_kind_to_highlight_group = {
   ["Namespace"] = "Normal",
   ["TemplateParameter"] = "Normal",
   ["Concept"] = "Normal",
-  ["Primitive"] = "Normal",
+  -- auto is sometimes a primitive
+  ["Primitive"] = "Type",
   ["Macro"] = "Macro",
-  ["InactiveCod"] = "Comment",
+  ["InactiveCode"] = "Comment",
 }
 
 M.hl_namespace = vim.api.nvim_create_namespace('semantic-tokens-ns')
@@ -86,14 +90,15 @@ function M.get_highlight_callback(bufnr)
     local line = 0
     local start = 0
     local data = result["data"]
-    local data_size = table.getn(data)
+    local num_tokens = math.floor(table.getn(data) / 5)
 
-    local i = 1
-    while (i <= (data_size - 5)) do
-      local delta_line = data[i]
-      local delta_start = data[i + 1]
-      local length = data[i + 2]
-      local token_kind = token_kinds[data[i + 3] + 1]
+    for i = 0, num_tokens - 1 do
+      local first_idx = 5*i + 1
+      local delta_line = data[first_idx]
+      local delta_start = data[first_idx + 1]
+      local length = data[first_idx + 2]
+      local token_idx = data[first_idx + 3] + 1
+      local token_kind = token_kinds[token_idx]
 
       line = line + delta_line
       if delta_line == 0 then
@@ -110,8 +115,6 @@ function M.get_highlight_callback(bufnr)
         start,
         start + length
       )
-
-      i = i + 5
     end
   end
 end
