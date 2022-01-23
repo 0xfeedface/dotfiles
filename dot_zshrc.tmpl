@@ -110,7 +110,11 @@ zstyle ':vcs_info:*' actionformats '%F{14}[%F{4}%b%F{14}%F{14}] (%F{9}%a%F{14})%
 
 precmd () { vcs_info }
 PROMPT="%F{6}%~%F{14} %# "
+RPS1=' '
 RPROMPT='${vcs_info_msg_0_}'
+
+VIM_MODE_VICMD_KEY='^B'
+[ -f ~/.local/share/zsh/vim-mode/zsh-vim-mode.plugin.zsh ] && source ~/.local/share/zsh/vim-mode/zsh-vim-mode.plugin.zsh
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 [ -f ~/.pyenv.zsh ] && source ~/.pyenv.zsh
