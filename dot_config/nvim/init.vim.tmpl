@@ -71,7 +71,6 @@ call plug#begin()
 
   " Classic Vim plug-ins
   Plug 'bkad/CamelCaseMotion'
-  Plug 'rhysd/vim-clang-format'
   " Plug 'jiangmiao/auto-pairs'
   Plug 'tibabit/vim-templates'
   Plug 'ziglang/zig.vim'
@@ -399,10 +398,10 @@ nmap ga <Plug>(EasyAlign)
 "----------------------------------------------------------------------------
 
 " Telescope
-nnoremap <leader>ff <cmd>Telescope find_files<cr>
-nnoremap <leader>fg <cmd>Telescope live_grep<cr>
-nnoremap <leader>fb <cmd>Telescope buffers<cr>
-nnoremap <leader>fh <cmd>Telescope help_tags<cr>
+nnoremap <leader>tf <cmd>Telescope find_files<cr>
+nnoremap <leader>tg <cmd>Telescope live_grep<cr>
+nnoremap <leader>tb <cmd>Telescope buffers<cr>
+nnoremap <leader>th <cmd>Telescope help_tags<cr>
 
 " Quick editing of init.vim
 map <leader>vi :call EditVimInit()<cr>
@@ -413,11 +412,15 @@ noremap <leader>h  :set hlsearch!<cr>
 " Remove trailing whitespace
 nmap <leader>w :call RemoveTrailingWhitespace()<cr>
 
+" Show diagnostics in float window
+nmap <leader>f :lua vim.diagnostic.open_float()<cr>
+
 " Remove DOS line endings
 nmap <leader>m :call RemoveDOSLineEndings()<cr>
 
 " Show syntax highlighting groups for word under cursor
-nmap <leader>p :TSHighlightCapturesUnderCursor<cr>
+" nmap <leader>p :TSHighlightCapturesUnderCursor<cr>
+nmap <leader>p :call <SID>SynStack()<cr>
 
 nmap <leader>d :lua vim.diagnostic.open_float()<cr>
 
@@ -463,3 +466,14 @@ endfunction
 function! RemoveDOSLineEndings()
   :%s///g
 endfunction
+
+" Show syntax highlighting groups for word under cursor
+function! <SID>SynStack()
+  if !exists("*synstack")
+    return
+  endif
+  for id in synstack(line("."), col("."))
+    echo synIDattr(id, "name")
+  endfor
+  " echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
+endfunc
