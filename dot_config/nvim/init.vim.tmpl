@@ -100,9 +100,17 @@ require'nvim-treesitter.configs'.setup {
   indent = { enable = false },
 }
 
-require'Comment'.setup()
+require'Comment'.setup {
+  mappings = {
+    extended = true
+  }
+}
 
 require'telescope'.setup {
+  defaults = {
+    layout_strategy = 'vertical'
+    -- preview = false
+  },
   extensions = {
     fzy_native = {
       override_generic_sorter = false,
@@ -127,18 +135,21 @@ EOF
 
 lua <<EOF
 local set_mappings = function (client, bufnr)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n' , 'gd', '<cmd>lua vim.lsp.buf.definition()<cr>', { noremap=true })
+  -- vim.api.nvim_buf_set_keymap(bufnr, 'n' , 'gd', '<cmd>lua vim.lsp.buf.definition()<cr>', { noremap=true })
+  vim.api.nvim_buf_set_keymap(bufnr, 'n' , 'gd', '<cmd>lua require("telescope.builtin").lsp_definitions()<cr>', { noremap=true })
   vim.api.nvim_buf_set_keymap(bufnr, 'n' , 'gD', '<cmd>lua vim.lsp.buf.declaration()<cr>', { noremap=true })
   vim.api.nvim_buf_set_keymap(bufnr, 'n' , 'K', '<cmd>lua vim.lsp.buf.hover()<cr>', { noremap=true })
-  vim.api.nvim_buf_set_keymap(bufnr, 'n' , 'gi', '<cmd>lua vim.lsp.buf.implementation()<cr>', { noremap=true })
+  -- vim.api.nvim_buf_set_keymap(bufnr, 'n' , 'gi', '<cmd>lua vim.lsp.buf.implementation()<cr>', { noremap=true })
+  vim.api.nvim_buf_set_keymap(bufnr, 'n' , 'gi', '<cmd>lua require("telescope.builtin").lsp_implementations()<cr>', { noremap=true })
   vim.api.nvim_buf_set_keymap(bufnr, 'n' , 'gs', '<cmd>lua vim.lsp.buf.signature_help()<cr>', { noremap=true })
-  vim.api.nvim_buf_set_keymap(bufnr, 'n' , 'gr', '<cmd>lua vim.lsp.buf.references()<cr>', { noremap=true })
+  -- vim.api.nvim_buf_set_keymap(bufnr, 'n' , 'gr', '<cmd>lua vim.lsp.buf.references()<cr>', { noremap=true })
+  vim.api.nvim_buf_set_keymap(bufnr, 'n' , 'gr', '<cmd>lua require("telescope.builtin").lsp_references()<cr>', { noremap=true })
 
   if client.resolved_capabilities.type_definition == true then
     vim.api.nvim_buf_set_keymap(bufnr, 'n' , 'gt', '<cmd>lua vim.lsp.buf.type_definition()<cr>', { noremap=true })
   end
 
-  -- vim.api.nvim_buf_set_keymap(bufnr, 'n' , '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<cr>', { noremap=true })
+  vim.api.nvim_buf_set_keymap(bufnr, 'n' , '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<cr>', { noremap=true })
 
   if client.resolved_capabilities.document_formatting == true then
     vim.api.nvim_buf_set_option(bufnr, "formatexpr", "v:lua.vim.lsp.formatexpr()")
