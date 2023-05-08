@@ -1,0 +1,242 @@
+(require 'autothemer)
+
+(autothemer-deftheme
+ solarized "Solarized"
+
+ ((((class color) (min-colors #xffffff)))
+ ;; Define Solarized colors
+(solarized-base03 "#002732")
+(solarized-base02 "#01313d")
+(solarized-base01 "#5d737b")
+(solarized-base00 "#6a8088")
+(solarized-base0 "#88999b")
+(solarized-base1 "#98a6a6")
+(solarized-base2 "#f4edda")
+(solarized-base3 "#fffce9")
+(solarized-yellow "#bb8e07")
+(solarized-orange "#d1511b")
+(solarized-red "#e33934")
+(solarized-magenta "#d93c87")
+(solarized-violet "#7176ca")
+(solarized-blue "#2f91d7")
+(solarized-cyan "#32a79d")
+(solarized-green "#8a9f00"))
+
+ ((default (:foreground solarized-base0 :background solarized-base03))
+  (cursor (:foreground solarized-base02 :background solarized-base1))
+  (mode-line (:foreground solarized-base03 :background solarized-base0))
+  (mode-line-inactive (:foreground solarized-base02 :background solarized-base1))
+  (fringe (:foreground solarized-base0 :background solarized-base02))
+  (hl-line (:foreground nil :background solarized-base02))
+  (region (:background solarized-base01 :distant-foreground solarized-base03))
+  (minibuffer-prompt (:foreground solarized-base1))
+  (highlight (:foreground solarized-base03 :background solarized-base0))
+  (match (:foreground solarized-cyan :background solarized-violet))
+  (escape-glyph (:foreground solarized-cyan))
+  (shadow (:foreground solarized-base1))
+  (help-key-binding (:foreground solarized-base03 :background solarized-base01))
+  (button (:foreground solarized-cyan))
+  (link (:foreground solarized-blue))
+  (line-number (:foreground solarized-base01))
+  (line-number-current-line (:foreground solarized-base1))
+
+  (error (:foreground solarized-red))
+  (success (:foreground solarized-green))
+  (warning (:foreground solarized-yellow))
+
+  ;; Completions
+  (completions-highlight (:foreground solarized-orange))
+  (completions-common-part (:foreground solarized-base1))
+  (completions-group-title (:slant 'italic :inherit 'shadow))
+  (completions-group-separator (:strike-through t :inherit 'shadow))
+  (completions-first-difference (:inherit 'bold))
+  (completions-annotations (:inherit ('italic 'default)))
+
+  ;; Xref
+  (xref-match (:inherit 'match))
+  (xref-file-header (:inherit 'compilation-info))
+  (xref-line-number (:inherit 'compilation-line-number))
+  (info-xref (:inherit 'link))
+  (info-xref-visited (:inherit ('link-visited 'info-xref)))
+  (info-header-xref (:inherit 'info-xref))
+
+  ;; Isearch
+  (isearch (:foreground solarized-base03 :background solarized-magenta))
+  (isearch-fail (:foreground solarized-base02 :background solarized-red))
+  (lazy-highlight (:foreground nil :background solarized-base01 :distant-foreground solarized-base03))
+  (isearch-group-1 (:foreground solarized-green :background solarized-magenta))
+  (isearch-group-2 (:foreground solarized-cyan :background solarized-magenta))
+
+  ;; Font-lock
+  (font-lock-keyword-face (:foreground solarized-magenta))
+  (font-lock-constant-face (:foreground solarized-violet))
+  (font-lock-string-face (:foreground solarized-green))
+  (font-lock-comment-face (:foreground solarized-base01))
+  (font-lock-comment-delimiter-face (:inherit font-lock-comment-face))
+  (font-lock-builtin-face (:foreground solarized-cyan))
+  (font-lock-preprocessor-face (:foreground solarized-yellow))
+  (font-lock-type-face (:foreground solarized-blue))
+  (font-lock-escape-face (:foreground solarized-orange))
+  (font-lock-number-face (:inherit 'font-lock-constant-face))
+  (font-lock-operator-face (:foreground solarized-magenta))
+  (font-lock-negation-char-face (:foreground solarized-magenta))
+  (font-lock-doc-face ())
+  (font-lock-regexp-face ())
+  (font-lock-bracket-face ())
+  (font-lock-warning-face ())
+  (font-lock-delimiter-face ())
+  (font-lock-doc-markup-face ())
+  (font-lock-punctuation-face ())
+  (font-lock-property-name-face ())
+  (font-lock-property-use-face ())
+  (font-lock-variable-name-face ())
+  (font-lock-variable-use-face ())
+  (font-lock-function-name-face ())
+  (font-lock-function-call-face ())
+  (font-lock-misc-punctuation-face ())
+  (font-lock-regexp-grouping-backslash ())
+  (font-lock-regexp-grouping-construct ())
+
+  ;; Dired
+  (dired-directory (:inherit 'font-lock-type-face))
+  (dired-symlink (:inherit 'font-lock-keyword-face))
+  (dired-broken-symlink (:foreground solarized-base03 :background solarized-magenta))
+  (dired-special (:foreground solarized-yellow))
+  (dired-warning (:inherit 'font-lock-warning-face))
+  (dired-flagged (:inherit 'error))
+  (dired-perm-write (:foreground solarized-green))
+  (dired-ignored (:inherit 'font-lock-comment-face))
+  (dired-marked (:foreground solarized-base03 :background solarized-violet))
+  (dired-mark (:foreground solarized-violet))
+  (dired-header (:foreground solarized-base03 :background solarized-base0))
+  (dired-set-id (:foreground solarized-red))
+
+  ;; Vertico
+  (vertico-current (:extend t :background solarized-base01 :distant-foreground solarized-base2))
+  (vertico-multiline (:inherit 'shadow))
+  (vertico-group-title (:slant 'italic :inherit 'shadow))
+  (vertico-group-separator (:strike-through t :inherit 'shadow))
+
+  ;; Tree-sitter highlights
+  (tree-sitter-hl-face:type.builtin (:foreground solarized-blue))
+  (tree-sitter-hl-face:property.definition (:foreground solarized-base0 :slant 'normal))
+  (tree-sitter-hl-face:method.call (:foreground solarized-base0 :slant 'normal))
+  (tree-sitter-hl-face:function.call (:foreground solarized-base0 :slant 'normal))
+  (tree-sitter-hl-face:property (:foreground solarized-base0 :slant 'normal))
+  (tree-sitter-hl-face:variable (:foreground solarized-base0 :slant 'normal))
+  (tree-sitter-hl-face:function (:foreground solarized-base0 :slant 'normal))
+  (tree-sitter-hl-face:escape (:inherit 'font-lock-keyword-face))
+  ;; (tree-sitter-hl-face:punctuation.bracket (:foreground solarized-base02 :slant 'normal))
+  (tree-sitter-hl-face:punctuation.delimiter (:foreground solarized-magenta :slant 'normal))
+
+  (line-number (:foreground solarized-base01))
+  (line-number-current-line (:foreground solarized-base1))
+
+  (whitespace-space (:foreground solarized-base02 :background nil))
+  (whitespace-hspace (:foreground solarized-base02 :background nil))
+  (whitespace-tab (:foreground solarized-base02 :background nil))
+  (whitespace-newline (:foreground solarized-base02 :background nil))
+  (whitespace-trailing (:foreground solarized-base02 :background solarized-red))
+  (whitespace-line (:foreground nil :background nil))
+  (Whitespace-space-before-tab (:foreground solarized-base02 :background nil))
+  (whitespace-indentation (:foreground solarized-base02 :background nil))
+  (whitespace-empty (:foreground nil :background nil))
+  (whitespace-space-after-tab (:foreground solarized-base02 :background nil))
+
+  ;; Outline-mode
+  (outline-1 (:foreground solarized-cyan))
+  (outline-2 (:foreground solarized-violet))
+  (outline-3 (:foreground solarized-blue))
+  (outline-4 (:foreground solarized-yellow))
+  (outline-5 (:foreground solarized-cyan))
+  (outline-6 (:foreground solarized-blue))
+  (outline-7 (:foreground solarized-violet))
+  (outline-8 (:foreground solarized-yellow))
+
+  ;; Org-mode
+  (org-todo (:foreground solarized-red))
+  (org-headline-todo (:foreground nil))
+  (org-done (:foreground solarized-green))
+  (org-headline-done (:foreground nil))
+  (org-date (:foreground solarized-cyan))
+  (org-link (:foreground solarized-cyan))
+  (org-checkbox (:foreground solarized-base1))
+  (org-document-title (:foreground solarized-magenta))
+  (org-document-info (:inherit 'default))
+  (org-document-info-keyword (:foreground solarized-base01))
+  (org-list-dt (:foreground solarized-base0))
+
+  ;; Rainbow delimiters-mode
+  (rainbow-delimiters-base-face (:inherit 'default))
+  (rainbow-delimiters-base-error-face (:foreground solarized-orange :inherit 'rainbow-delimiters-base-face))
+  (rainbow-delimiters-unmatched-face (:background solarized-red :foreground solarized-base0))
+  (rainbow-delimiters-mismatched-face (:inherit 'rainbow-delimiters-unmatched-face))
+  (rainbow-delimiters-depth-1-face (:foreground solarized-cyan))
+  (rainbow-delimiters-depth-2-face (:foreground solarized-yellow))
+  (rainbow-delimiters-depth-3-face (:foreground solarized-blue))
+  (rainbow-delimiters-depth-4-face (:foreground solarized-violet))
+  (rainbow-delimiters-depth-5-face (:foreground solarized-cyan))
+  (rainbow-delimiters-depth-6-face (:foreground solarized-yellow))
+  (rainbow-delimiters-depth-7-face (:foreground solarized-blue))
+  (rainbow-delimiters-depth-8-face (:foreground solarized-violet))
+
+  ;; Flymake
+  (flymake-note (:underline (:style 'wave :color solarized-green)))
+  (flymake-warning (:underline (:style 'wave :color solarized-yellow)))
+  (flymake-error (:underline (:style 'wave :color solarized-red)))
+
+  ;; Eglot
+  (eglot-highlight-symbol-face (:background solarized-base01 :distant-foreground solarized-base02))
+  (eglot-type-hint-face (:inherit font-lock-comment-face :height 150))
+  (eglot-inlay-hint-face (:inherit font-lock-comment-face :height 150))
+  (eglot-parameter-hint-face (:inherit font-lock-comment-face :height 150))
+  ;; (eglot-highlight-symbol-face (:foreground nil :background nil))
+  (eglot-diagnostic-tag-deprecated-face (:foreground nil :background nil))
+  (eglot-diagnostic-tag-unnecessary-face (:foreground nil :background nil))
+
+  ;; Vertico
+  (vertico-current (:extend t :inherit 'highlight))
+  (vertico-multiline (:inherit 'shadow))
+  (vertico-group-title (:inherit 'shadow))
+  (vertico-group-separator (:strike-through t :inherit 'shadow))
+
+  ;; Orderless
+  (orderless-match-face-0 (:weight 'bold :foreground solarized-magenta))
+  (orderless-match-face-1 (:weight 'bold :foreground solarized-blue))
+  (orderless-match-face-2 (:weight 'bold :foreground solarized-green))
+  (orderless-match-face-3 (:weight 'bold :foreground solarized-yellow))
+
+  ;; Embark
+  ;; TODO
+
+  ;; Corfu
+  (corfu-default (:background solarized-base03))
+  (corfu-border (:background solarized-base03))
+  (corfu-current (:foreground solarized-green :background solarized-base02))
+  (corfu-bar (:background solarized-cyan)) ;; Scrollbar
+  (corfu-deprecated (:strike-through t :inherit 'shadow))
+  (corfu-annotations (:inherit 'completions-annotations))
+
+  ;; Magit
+  ;; (magit-section-highlight (:foreground nil :background solarized-base02))
+  ;; (magit-branch-local (:foreground solarized-blue))
+  ;; (magit-branch-current (:inherit 'magit-branch-local :box 1))
+  ;; (magit-branch-remote (:foreground solarized-magenta))
+  ;; (magit-branch-remote-head (:inherit 'magit-branch-remote :box 1))
+  ;; (magit-tag (:foreground solarized-yellow))
+  ;; (magit-section-heading (:inherit 'magit-tag))
+  ;; (magit-hash (:inherit font-lock-comment-face))
+  ;; (magit-log-author (:inherit 'default))
+  ;; (magit-log-date (:inherit 'default))
+  ;; (magit-diff-added (:foreground solarized-green))
+  ;; (magit-diff-added-highlight (:foreground solarized-base03 :background solarized-green))
+  ;; (magit-diff-removed (:foreground solarized-red))
+  ;; (magit-diff-removed-highlight (:foreground solarized-base03 :background solarized-red))
+  ;; (magit-diff-context ())
+  ;; (magit-diff-context-highlight (:foreground solarized-base03 :background solarized-base01))
+  ;; (magit-diffstat-added (:inherit 'magit-diff-added))
+  ;; (magit-diffstat-removed (:inherit 'magit-diff-removed))
+
+  ))
+
+(provide-theme 'solarized)
