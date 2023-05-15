@@ -339,7 +339,10 @@
 (setq c-basic-offset 4)
 (setq c-default-style "stroustrup")
 (setq treesit-font-lock-level 4)
-(add-hook 'c++-ts-mode-hook (lambda () (define-key c++-ts-mode-map (kbd "M-[") (sp-restrict-to-pairs-interactive "{" 'sp-down-sexp))))
+(add-hook 'c++-ts-mode-hook
+          (lambda () (define-key c++-ts-mode-map
+                                 (kbd "M-[")
+                                 (sp-restrict-to-pairs-interactive "{" 'sp-down-sexp))))
 ;; (add-hook 'prog-mode-hook 'electric-pair-mode)
 ;; TODO: superflous w/ rainbow-delimiters?
 ;; (show-paren-mode 1)
