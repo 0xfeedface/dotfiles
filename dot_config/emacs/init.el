@@ -346,3 +346,4 @@
 
 (require 'sane-defaults)
 (put 'scroll-left 'disabled nil)
+(put 'narrow-to-region 'disabled nil)
