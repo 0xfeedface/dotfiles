@@ -99,7 +99,7 @@
         (theme-file (concat theme-path "solarized-solarized-dark-theme.el")))
     (unless (file-exists-p theme-file)
       (solarized-create-theme-file-with-palette 'dark 'solarized-solarized-dark
-        '("#002b36" "#fdf6e3"
+        '("#002732" "#ffffee"
           "#b58900" "#cb4b16" "#dc322f" "#d33682" "#6c71c4" "#268bd2" "#2aa198" "#859900")
         '((custom-theme-set-faces
            theme-name
@@ -130,7 +130,13 @@
   :ensure solarized-theme
   :init
   (setq solarized-use-variable-pitch nil
-        solarized-use-less-bold t)
+        solarized-use-less-bold t
+        solarized-high-contrast-mode-line t
+        solarized-height-minus-1 1.0
+        solarized-height-plus-1 1.0
+        solarized-height-plus-2 1.0
+        solarized-height-plus-3 1.0
+        solarized-height-plus-4 1.0)
   :config
   (solarized-create-theme)
   (load-theme 'solarized-solarized-dark t))
