@@ -7,7 +7,7 @@
 ;; Disable splash screen
 (setq inhibit-startup-message t)
 
-;; Store lisp files and themes in subdirs
+;; Store lisp files and thems in subdirs
 (add-to-list 'load-path (expand-file-name "site-lisp" user-emacs-directory))
 (add-to-list 'custom-theme-load-path (expand-file-name "themes" user-emacs-directory))
 
@@ -64,6 +64,9 @@
 ;; Make shebang (#!) files executable when saved
 (add-hook 'after-save-hook #'executable-make-buffer-file-executable-if-script-p)
 
+(add-to-list 'major-mode-remap-alist '(c-mode . c-ts-mode))
+(add-to-list 'major-mode-remap-alist '(c++-mode . c++-ts-mode))
+
 (require 'whitespace)
 ;; (setq whitespace-style '(face empty tabs lines-trail trailing))
 (setq whitespace-style '(facs tabs spaces tab-mark newline-mark))
@@ -76,32 +79,72 @@
 (require 'package)
 (setq package-enable-at-startup nil)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
+;; (add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
 
 ;; Autothemer
 (use-package autothemer
+  :disabled
   :ensure t
   :config
-  (load-theme 'solarized t))
+  (load-theme 'solarized))
 
 ;; Load theme
 ;; (load-theme 'default-dark t)
 ;; (load-theme 'dracula-pro t)
-;; (custom-set-variables 'dracula-alternate-mode-line-and-minibuffer t)
 ;; (load-theme 'solarized-dark t)
 
-(use-package solarized-theme
-  ;; FIXME: doesn't work w/ use-package 2.4.5
-  :disabled t
-  :ensure solarized-theme
-  :config
-  (load-theme 'solarized-dark-theme t))
+(defun solarized-create-theme ()
+  (let* ((theme-path (expand-file-name "themes" user-emacs-directory))
+         (theme-file (concat theme-path "solarized-solarized-dark-theme.el")))
+    (unless (file-exists-p theme-file)
+      (solarized-create-theme-file-with-palette 'dark 'solarized-solarized-dark
+        '("#002b36" "#fdf6e3"
+          "#b58900" "#cb4b16" "#dc322f" "#d33682" "#6c71c4" "#268bd2" "#2aa198" "#859900")
+        '((custom-theme-set-faces
+           theme-name
+           `(default ((,class (:foreground ,base0 :background ,base03))))
+           `(region ((,class (:distant-foreground ,base03 :background ,base01))))
+           
+           `(font-lock-keyword-face ((,class (:foreground ,magenta))))
+           `(font-lock-constant-face ((,class (:foreground ,violet))))
+           `(font-lock-string-face ((,class (:foreground ,green))))
+           `(font-lock-coment-face ((,class (:foreground ,base01))))
+           `(font-lock-comment-delimiter-face ((,class (:foreground ,base01))))
+           `(font-lock-builtin-face ((,class (:foreground ,cyan))))
+           `(font-lock-preprocessor-face ((,class (:foreground ,yellow))))
+           `(font-lock-type-face ((,class (:foreground ,blue))))
+           `(font-lock-escape-face ((,class (:foreground ,orange))))
+           `(font-lock-number-face ((,class (:foreground ,violet))))
+           `(font-lock-operator-face ((,class (:foreground ,magenta))))
+           `(font-lock-negation-char-face ((,class (:foreground ,magenta))))
+           `(font-lock-property-name-face ((,class (:foreground ,base0))))
+           `(font-lock-property-use-face ((,class (:foreground ,base0))))
+           `(font-lock-variable-name-face ((,class (:foreground ,base0))))
+           `(font-lock-variable-use-face ((,class (:foreground ,base0))))
+           `(font-lock-function-name-face ((,class (:foreground ,base0))))
+           `(font-lock-function-call-face ((,class (:foreground ,base0))))
+           ))))))
 
-(use-package material-theme
-  :disabled t
-  :ensure t
-  :config (load-theme 'material t))
+(use-package solarized-theme
+  :ensure solarized-theme
+  :init
+  (setq solarized-use-variable-pitch nil
+        solarized-use-less-bold t)
+  :config
+  (solarized-create-theme)
+  (load-theme 'solarized-solarized-dark t))
+
+;; Smartparens
+(use-package smartparens-config
+  :ensure smartparens
+  :hook
+  (prog-mode . smartparens-mode)
+  ;; :bind
+  ;; ("M-[" . '(sp-restrict-to-pairs-interactive "{" 'sp-down-sexp))
+  :config
+  (sp-local-pair 'c++-ts-mode "<" ">"))
+
 
 ;; Keep cursor away from edges when scrolling up/down
 (use-package smooth-scrolling
@@ -126,21 +169,51 @@
   :config
   (vertico-mode))
 
-;; Save history across Emacs restarts
+(use-package vertico-directory
+  :ensure nil
+  :after vertico
+  :bind (:map vertico-map
+              ("RET" . vertico-directory-enter)
+              ("DEL" . vertico-directory-delete-char)
+              ("M-DEL" . vertico-directory-delete-word))
+  :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
+
+;; Save history across Emacs restarts. Vertico sorts by history position.
 (use-package savehist
   :ensure t
   :config
   (savehist-mode))
 
+;; Show num matches for Isearch
+(use-package anzu
+  :ensure t
+  :config
+  (global-anzu-mode 1))
+
+;; Prefix key help
+(use-package which-key
+  :ensure t
+  :config
+  (which-key-mode 1))
+
 ;; Completion style w/o order
 (use-package orderless
   :ensure t
   :custom
+  ;; (orderless-matching-styles '(orderless-literal orderless-regexp))
+  (orderless-matching-styles '(orderless-literal orderless-flex))
   (completion-styles '(orderless basic))
-  (completion-category-overrides '((file (styles . (partial-completion))))))
+  (completion-category-overrides '((file (styles . (basic partial-completion flex initials)))))
+  )
 
 (use-package embark
   :disabled
+  :config
+  (global-set-key [remap describe-bindings] #'embark-bindings)
+  (global-set-key (kbd "C-.") 'embark-act)
+  (with-eval-after-load 'embark-consult
+  (add-hook 'embark-collect-mode-hook #'consult-preview-at-point-mode))
+
   :ensure t)
 
 (use-package embark-consult
@@ -150,12 +223,6 @@
   :bind
   ("C-s" . consult-line)
   (:map minibuffer-local-map ("C-r" . 'consult-history)))
-
-(global-set-key [remap describe-bindings] #'embark-bindings)
-(global-set-key (kbd "C-.") 'embark-act)
-
-(with-eval-after-load 'embark-consult
-  (add-hook 'embark-collect-mode-hook #'consult-preview-at-point-mode))
 
 ;; In-buffer completion UI
 (use-package corfu
@@ -200,18 +267,21 @@
 (setq org-hide-leading-stars t)
 
 ;; Eglot
-(setq xref-auto-jump-to-first-xref 'show)
-;; (setq eldoc-echo-area-use-multiline-p 'truncate-sym-name-if-fit)
-(setq eldoc-echo-area-use-multiline-p nil)
-(setq eldoc-echo-area-display-truncation-message nil)
-(setq eldoc-minor-mode-string nil)
-(setq eldoc-echo-area-prefer-doc-buffer t)
-(eldoc-add-command 'c-electric-paren)
-(setq max-mini-window-height 3)
-(require 'eglot)
-(add-hook 'c++-mode-hook 'eglot-ensure)
-(add-hook 'c++-ts-mode-hook 'eglot-ensure)
-(add-hook 'eglot-managed-mode-hook (lambda () (eglot-inlay-hints-mode -1)))
+(use-package eglot
+  :ensure nil
+  :init
+  (setq xref-auto-jump-to-first-xref 'show)
+  ;; (setq eldoc-echo-area-use-multiline-p 'truncate-sym-name-if-fit)
+  (setq eldoc-echo-area-use-multiline-p nil)
+  (setq eldoc-echo-area-display-truncation-message nil)
+  (setq eldoc-minor-mode-string nil)
+  (setq eldoc-echo-area-prefer-doc-buffer t)
+  (eldoc-add-command 'c-electric-paren)
+  (setq max-mini-window-height 3)
+  :config
+  (add-hook 'eglot-managed-mode-hook (lambda () (eglot-inlay-hints-mode -1)))
+  (add-hook 'c++-mode-hook 'eglot-ensure)
+  (add-hook 'c++-ts-mode-hook 'eglot-ensure))
 
 ;; Magit
 (use-package magit
@@ -239,6 +309,7 @@
   (setq tab-always-indent 'complete))
 
 (use-package rainbow-delimiters
+  :disabled
   :ensure t
   :hook (prog-mode . rainbow-delimiters-mode))
 
@@ -247,15 +318,12 @@
 ;; (add-to-list 'treesit-language-source-alist '(c "https://github.com/tree-sitter/tree-sitter-c"))
 ;; (add-to-list 'treesit-language-source-alist '(cpp "https://github.com/tree-sitter/tree-sitter-cpp"))
 
-(add-to-list 'major-mode-remap-alist '(c-mode . c-ts-mode))
-(add-to-list 'major-mode-remap-alist '(c++-mode . c++-ts-mode))
-
 ;; C/C++
 (setq c-basic-offset 4)
 (setq c-default-style "stroustrup")
 (setq treesit-font-lock-level 4)
-
-(add-hook 'prog-mode-hook 'electric-pair-mode)
+(add-hook 'c++-ts-mode-hook (lambda () (define-key c++-ts-mode-map (kbd "M-[") (sp-restrict-to-pairs-interactive "{" 'sp-down-sexp))))
+;; (add-hook 'prog-mode-hook 'electric-pair-mode)
 ;; TODO: superflous w/ rainbow-delimiters?
 ;; (show-paren-mode 1)
 
