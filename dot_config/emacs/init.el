@@ -95,8 +95,8 @@
 ;; (load-theme 'solarized-dark t)
 
 (defun solarized-create-theme ()
-  (let* ((theme-path (expand-file-name "themes" user-emacs-directory))
-         (theme-file (concat theme-path "solarized-solarized-dark-theme.el")))
+  (let* ((theme-path (expand-file-name "themes/" user-emacs-directory))
+        (theme-file (concat theme-path "solarized-solarized-dark-theme.el")))
     (unless (file-exists-p theme-file)
       (solarized-create-theme-file-with-palette 'dark 'solarized-solarized-dark
         '("#002b36" "#fdf6e3"
