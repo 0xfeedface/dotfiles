@@ -265,6 +265,8 @@
                                  (plist-put org-format-latex-options :scale 1.7))))
 (setq org-latex-create-formula-image-program 'dvisvgm)
 (setq org-hide-leading-stars t)
+(setq org-todo-keywords '((sequence "TODO" "PENDING" "|" "DONE")))
+(require 'ox-md) ;; Markdown exporter
 
 ;; Eglot
 (use-package eglot
@@ -308,10 +310,19 @@
   ;; `completion-at-point' is often bound to M-TAB.
   (setq tab-always-indent 'complete))
 
+(use-package markdown-mode
+  :ensure t
+  :config
+  (setq markdown-asymmetric-header t)
+  (setq markdown-header-scaling t))
+
 (use-package rainbow-delimiters
   :disabled
   :ensure t
   :hook (prog-mode . rainbow-delimiters-mode))
+
+(use-package rg
+  :ensure t)
 
 (require 'treesit)
 (setq treesit-extra-load-path '("/Users/norman/Code/tree-sitter-module/dist"))
@@ -328,3 +339,4 @@
 ;; (show-paren-mode 1)
 
 (require 'sane-defaults)
+(put 'scroll-left 'disabled nil)
