@@ -96,21 +96,21 @@
 
 (defun solarized-create-theme ()
   (let* ((theme-path (expand-file-name "themes/" user-emacs-directory))
-        (theme-file (concat theme-path "solarized-solarized-dark-theme.el")))
+        (theme-file (concat theme-path "solarized-solarized-hc-dark-theme.el")))
     (unless (file-exists-p theme-file)
-      (solarized-create-theme-file-with-palette 'dark 'solarized-solarized-dark
-        '("#002732" "#ffffee"
+      (solarized-create-theme-file-with-palette 'dark 'solarized-solarized-hc-dark
+        '("#002b36" "#fdf6e3"
           "#b58900" "#cb4b16" "#dc322f" "#d33682" "#6c71c4" "#268bd2" "#2aa198" "#859900")
         '((custom-theme-set-faces
            theme-name
-           `(default ((,class (:foreground ,base0 :background ,base03))))
+           `(default ((,class (:foreground ,base1 :background ,base03))))
            `(region ((,class (:distant-foreground ,base03 :background ,base01))))
            
            `(font-lock-keyword-face ((,class (:foreground ,magenta))))
            `(font-lock-constant-face ((,class (:foreground ,violet))))
            `(font-lock-string-face ((,class (:foreground ,green))))
-           `(font-lock-coment-face ((,class (:foreground ,base01))))
-           `(font-lock-comment-delimiter-face ((,class (:foreground ,base01))))
+           `(font-lock-comment-face ((,class (:foreground ,base00))))
+           `(font-lock-comment-delimiter-face ((,class (:foreground ,base00))))
            `(font-lock-builtin-face ((,class (:foreground ,cyan))))
            `(font-lock-preprocessor-face ((,class (:foreground ,yellow))))
            `(font-lock-type-face ((,class (:foreground ,blue))))
@@ -118,12 +118,12 @@
            `(font-lock-number-face ((,class (:foreground ,violet))))
            `(font-lock-operator-face ((,class (:foreground ,magenta))))
            `(font-lock-negation-char-face ((,class (:foreground ,magenta))))
-           `(font-lock-property-name-face ((,class (:foreground ,base0))))
-           `(font-lock-property-use-face ((,class (:foreground ,base0))))
-           `(font-lock-variable-name-face ((,class (:foreground ,base0))))
-           `(font-lock-variable-use-face ((,class (:foreground ,base0))))
-           `(font-lock-function-name-face ((,class (:foreground ,base0))))
-           `(font-lock-function-call-face ((,class (:foreground ,base0))))
+           `(font-lock-property-name-face ((,class (:foreground ,base1))))
+           `(font-lock-property-use-face ((,class (:foreground ,base1))))
+           `(font-lock-variable-name-face ((,class (:foreground ,base1))))
+           `(font-lock-variable-use-face ((,class (:foreground ,base1))))
+           `(font-lock-function-name-face ((,class (:foreground ,base1))))
+           `(font-lock-function-call-face ((,class (:foreground ,base1))))
            ))))))
 
 (use-package solarized-theme
@@ -139,7 +139,8 @@
         solarized-height-plus-4 1.0)
   :config
   (solarized-create-theme)
-  (load-theme 'solarized-solarized-dark t))
+  (load-theme 'solarized-solarized-hc-dark t))
+
 
 ;; Smartparens
 (use-package smartparens-config
