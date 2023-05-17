@@ -36,7 +36,7 @@
 (setq set-fringe-mode 30)
 
 ;; Set default face
-(set-face-attribute 'default nil :font "Iosevka Fixed Slab" :height 170)
+(set-face-attribute 'default nil :font "Iosevka Fixed Slab")
 
 ;; Use spaces instead of tabs for indentation
 (setq-default indent-tabs-mode nil)
@@ -45,6 +45,12 @@
 (setq display-line-numbers-type 'relative
       display-line-numbers-current-absolute t)
 (global-display-line-numbers-mode)
+
+;; Revert buffers when the underlying file has changed
+(global-auto-revert-mode 1)
+
+;; Revert Dired and other buffers
+(setq global-auto-revert-non-file-buffers t)
 
 (add-hook 'after-init-hook #'recentf-mode)
 (setq recentf-max-saved-items 100)
@@ -60,6 +66,10 @@
   (add-to-list 'default-frame-alist '(ns-appearance . dark))
   (add-hook 'ns-system-appearance-change-functions
             #'solarized-update-background-mode))
+
+(if (eq system-type 'darwin)
+    (set-face-attribute 'default nil :height 170)
+  (set-face-attribute 'default nil :height 140))
 
 ;; Make shebang (#!) files executable when saved
 (add-hook 'after-save-hook #'executable-make-buffer-file-executable-if-script-p)
@@ -127,6 +137,7 @@
            ))))))
 
 (use-package solarized-theme
+  :disabled
   :ensure solarized-theme
   :init
   (setq solarized-use-variable-pitch nil
@@ -141,13 +152,20 @@
   (solarized-create-theme)
   (load-theme 'solarized-solarized-hc-dark t))
 
-
 ;; Smartparens
 (use-package smartparens-config
   :ensure smartparens
   :hook
   (prog-mode . smartparens-mode)
-  ;; :bind
+  :bind (:map smartparens-mode-map
+              ("C-f" . sp-forward-symbol)
+              ("C-b" . sp-backward-symbol)
+              ("C-M-f" . sp-forward-sexp)
+              ("C-M-b" . sp-backward-sexp)
+              ("C-<down>" . sp-down-sexp)
+              ("C-<up>" . sp-backward-up-sexp)
+              ("M-<down>" . sp-backward-down-sexp)
+              ("M-<up>" . sp-up-sexp))
   ;; ("M-[" . '(sp-restrict-to-pairs-interactive "{" 'sp-down-sexp))
   :config
   (sp-local-pair 'c++-ts-mode "<" ">"))
