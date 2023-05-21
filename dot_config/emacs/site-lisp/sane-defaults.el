@@ -78,6 +78,9 @@
 ;; Allow recursive minibuffers
 (setq enable-recursive-minibuffers t)
 
+;; Don't pop up GUI dialogs when prompting
+(setq use-dialog-box nil)
+
 ;; org-mode: Don't ruin S-arrow to switch windows please (use M-+ and M-- instead to toggle)
 (setq org-replace-disputed-keys t)
 
