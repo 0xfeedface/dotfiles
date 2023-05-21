@@ -117,11 +117,16 @@
               ("C-b" . sp-backward-symbol)
               ("C-M-f" . sp-forward-sexp)
               ("C-M-b" . sp-backward-sexp)
-              ("C-<down>" . sp-down-sexp)
+              ("C-<down>" . sp-backward-down-sexp)
               ("C-<up>" . sp-backward-up-sexp)
-              ("M-<down>" . sp-backward-down-sexp)
+              ("M-<down>" . sp-down-sexp)
               ("M-<up>" . sp-up-sexp))
   ;; ("M-[" . '(sp-restrict-to-pairs-interactive "{" 'sp-down-sexp))
+  :custom
+  (sp-navigate-reindent-after-up nil)
+  (sp-navigate-reindent-after-up-in-string nil)
+  (sp-c-modes '(c-mode c++-mode c-ts-mode c++-ts-mode))
+  (sp-navigate-close-if-unbalanced nil)
   :config
   (sp-local-pair 'c++-ts-mode "<" ">"))
 
@@ -317,9 +322,11 @@
 (setq c-default-style "stroustrup")
 (setq treesit-font-lock-level 4)
 (add-hook 'c++-ts-mode-hook
-          (lambda () (define-key c++-ts-mode-map
-                                 (kbd "M-[")
-                                 (sp-restrict-to-pairs-interactive "{" 'sp-down-sexp))))
+          (lambda () (define-key
+                      c++-ts-mode-map
+                      (kbd "M-[")
+                      (sp-restrict-to-pairs-interactive "{" 'sp-down-sexp))))
+
 ;; (add-hook 'prog-mode-hook 'electric-pair-mode)
 ;; TODO: superflous w/ rainbow-delimiters?
 ;; (show-paren-mode 1)
