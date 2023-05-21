@@ -63,8 +63,7 @@
   (add-to-list 'exec-path "/opt/homebrew/bin")
   (add-to-list 'exec-path "/opt/homebrew/opt/llvm/bin")
   (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
-  (add-to-list 'default-frame-alist '(ns-appearance . dark))
-  )
+  (add-to-list 'default-frame-alist '(ns-appearance . dark)))
 
 (if (eq system-type 'darwin)
     (set-face-attribute 'default nil :height 170)
@@ -326,6 +325,8 @@
                       c++-ts-mode-map
                       (kbd "M-[")
                       (sp-restrict-to-pairs-interactive "{" 'sp-down-sexp))))
+(add-hook 'emacs-lisp-mode-hook
+          (lambda () (sp-local-pair 'emacs-lisp-mode "'" nil :actions nil)))
 
 ;; (add-hook 'prog-mode-hook 'electric-pair-mode)
 ;; TODO: superflous w/ rainbow-delimiters?
