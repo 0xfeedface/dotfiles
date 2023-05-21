@@ -64,8 +64,7 @@
   (add-to-list 'exec-path "/opt/homebrew/opt/llvm/bin")
   (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
   (add-to-list 'default-frame-alist '(ns-appearance . dark))
-  (add-hook 'ns-system-appearance-change-functions
-            #'solarized-update-background-mode))
+  )
 
 (if (eq system-type 'darwin)
     (set-face-attribute 'default nil :height 170)
@@ -76,6 +75,22 @@
 
 (add-to-list 'major-mode-remap-alist '(c-mode . c-ts-mode))
 (add-to-list 'major-mode-remap-alist '(c++-mode . c++-ts-mode))
+
+;; Ad-hoc theme
+(custom-set-faces
+ '(font-lock-comment-face ((t (:foreground "#8f8f8f"))))
+ '(font-lock-comment-delimiter-face ((t (:inherit 'font-lock-comment-face))))
+ '(font-lock-string-face ((t (:foreground "ForestGreen")))) ;VioletRed4
+ '(font-lock-builtin-face ((t (:foreground "sienna"))))
+ '(font-lock-type-face ((t (:foreground "dark slate blue"))))
+ '(font-lock-variable-name-face ((t (:inherit 'default))))
+ '(font-lock-operator-face ((t (:inherit 'font-lock-keyword-face))))
+ '(font-lock-negation-char-face ((t (:inherit 'font-lock-keyword-face))))
+ '(font-lock-escape-face ((t (:inherit 'warning :bold nil))))
+ '(font-lock-number-face ((t (:inherit 'font-lock-constant-face))))
+ ;; '(font-lock--face ((t (:foreground ))))
+ '(org-default ((t (:inherit 'default :font "Iosevka Custom Fixed Sans"))))
+ )
 
 (require 'whitespace)
 ;; (setq whitespace-style '(face empty tabs lines-trail trailing))
@@ -91,66 +106,6 @@
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 ;; (add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
-
-;; Autothemer
-(use-package autothemer
-  :disabled
-  :ensure t
-  :config
-  (load-theme 'solarized))
-
-;; Load theme
-;; (load-theme 'default-dark t)
-;; (load-theme 'dracula-pro t)
-;; (load-theme 'solarized-dark t)
-
-(defun solarized-create-theme ()
-  (let* ((theme-path (expand-file-name "themes/" user-emacs-directory))
-        (theme-file (concat theme-path "solarized-solarized-hc-dark-theme.el")))
-    (unless (file-exists-p theme-file)
-      (solarized-create-theme-file-with-palette 'dark 'solarized-solarized-hc-dark
-        '("#002b36" "#fdf6e3"
-          "#b58900" "#cb4b16" "#dc322f" "#d33682" "#6c71c4" "#268bd2" "#2aa198" "#859900")
-        '((custom-theme-set-faces
-           theme-name
-           `(default ((,class (:foreground ,base1 :background ,base03))))
-           `(region ((,class (:distant-foreground ,base03 :background ,base01))))
-           
-           `(font-lock-keyword-face ((,class (:foreground ,magenta))))
-           `(font-lock-constant-face ((,class (:foreground ,violet))))
-           `(font-lock-string-face ((,class (:foreground ,green))))
-           `(font-lock-comment-face ((,class (:foreground ,base00))))
-           `(font-lock-comment-delimiter-face ((,class (:foreground ,base00))))
-           `(font-lock-builtin-face ((,class (:foreground ,cyan))))
-           `(font-lock-preprocessor-face ((,class (:foreground ,yellow))))
-           `(font-lock-type-face ((,class (:foreground ,blue))))
-           `(font-lock-escape-face ((,class (:foreground ,orange))))
-           `(font-lock-number-face ((,class (:foreground ,violet))))
-           `(font-lock-operator-face ((,class (:foreground ,magenta))))
-           `(font-lock-negation-char-face ((,class (:foreground ,magenta))))
-           `(font-lock-property-name-face ((,class (:foreground ,base1))))
-           `(font-lock-property-use-face ((,class (:foreground ,base1))))
-           `(font-lock-variable-name-face ((,class (:foreground ,base1))))
-           `(font-lock-variable-use-face ((,class (:foreground ,base1))))
-           `(font-lock-function-name-face ((,class (:foreground ,base1))))
-           `(font-lock-function-call-face ((,class (:foreground ,base1))))
-           ))))))
-
-(use-package solarized-theme
-  :disabled
-  :ensure solarized-theme
-  :init
-  (setq solarized-use-variable-pitch nil
-        solarized-use-less-bold t
-        solarized-high-contrast-mode-line t
-        solarized-height-minus-1 1.0
-        solarized-height-plus-1 1.0
-        solarized-height-plus-2 1.0
-        solarized-height-plus-3 1.0
-        solarized-height-plus-4 1.0)
-  :config
-  (solarized-create-theme)
-  (load-theme 'solarized-solarized-hc-dark t))
 
 ;; Smartparens
 (use-package smartparens-config
@@ -288,6 +243,7 @@
 (add-hook 'org-mode-hook (lambda ()
                            (setq org-format-latex-options
                                  (plist-put org-format-latex-options :scale 1.7))))
+(add-hook 'org-mode-hook 'buffer-face-mode)
 (setq org-latex-create-formula-image-program 'dvisvgm)
 (setq org-hide-leading-stars t)
 (setq org-todo-keywords '((sequence "TODO" "PENDING" "|" "DONE")))
