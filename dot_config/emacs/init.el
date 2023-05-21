@@ -36,7 +36,7 @@
 (setq set-fringe-mode 30)
 
 ;; Set default face
-(set-face-attribute 'default nil :font "Iosevka Fixed Slab")
+(set-face-attribute 'default nil :font "Iosevka Custom Fixed Slab")
 
 ;; Use spaces instead of tabs for indentation
 (setq-default indent-tabs-mode nil)
@@ -49,7 +49,7 @@
 ;; Revert buffers when the underlying file has changed
 (global-auto-revert-mode 1)
 
-;; Revert Dired and other buffers
+;; Revert Dired and other buffers automatically
 (setq global-auto-revert-non-file-buffers t)
 
 (add-hook 'after-init-hook #'recentf-mode)
