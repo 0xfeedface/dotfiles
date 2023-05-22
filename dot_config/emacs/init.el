@@ -138,7 +138,10 @@
 ;; Keep cursor away from edges when scrolling up/down
 (use-package smooth-scrolling
   :ensure t
-  :config (smooth-scrolling-mode 1))
+  :custom
+  (smooth-scroll-margin 3)
+  :config
+  (smooth-scrolling-mode 1))
 
 ;; Represent undo-history as an actual tree (visualize with C-x u)
 (use-package undo-tree
@@ -334,6 +337,7 @@
 ;; C/C++
 (use-package cc-mode
   :ensure nil
+  :bind (:map c++-ts-mode-map ("M-o" . ff-find-other-file))
   :config
   (setq c-basic-offset 4)
   (setq c-default-style "stroustrup"))
