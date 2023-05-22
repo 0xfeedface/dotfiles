@@ -89,16 +89,8 @@
  '(font-lock-number-face ((t (:inherit 'font-lock-constant-face))))
  ;; '(font-lock--face ((t (:foreground ))))
  '(org-default ((t (:inherit 'default :font "Iosevka Custom Fixed Sans"))))
+ '(org-block ((t (:font "Iosevka Custom Fixed Slab"))))
  )
-
-(require 'whitespace)
-;; (setq whitespace-style '(face empty tabs lines-trail trailing))
-(setq whitespace-style '(facs tabs spaces tab-mark newline-mark))
-(setq whitespace-line-column 80)
-(setq whitespace-display-mappings
-      '((tab-mark ?\t [?▸ ?\t])
-        (newline-mark ?\n [?¬ ?\n])))
-;; (global-whitespace-mode t)
 
 (require 'package)
 (setq package-enable-at-startup nil)
@@ -106,11 +98,24 @@
 ;; (add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
 
+(use-package whitespace
+  :ensure nil
+  :config
+  ;; (setq whitespace-style '(face empty tabs lines-trail trailing))
+  (setq whitespace-style '(facs tabs spaces tab-mark newline-mark))
+  (setq whitespace-line-column 80)
+  (setq whitespace-display-mappings
+        '((tab-mark ?\t [?▸ ?\t])
+          (newline-mark ?\n [?¬ ?\n])))
+  ;; (global-whitespace-mode t)
+)
+
 ;; Smartparens
 (use-package smartparens-config
   :ensure smartparens
   :hook
   (prog-mode . smartparens-mode)
+  (emacs-lisp-mode . (lambda () (sp-local-pair 'emacs-lisp-mode "'" nil :actions nil)))
   :bind (:map smartparens-mode-map
               ("C-f" . sp-forward-symbol)
               ("C-b" . sp-backward-symbol)
@@ -244,14 +249,22 @@
                                                      corfu-auto nil))))
 
 ;; Org
-(add-hook 'org-mode-hook (lambda ()
-                           (setq org-format-latex-options
-                                 (plist-put org-format-latex-options :scale 1.7))))
-(add-hook 'org-mode-hook 'buffer-face-mode)
-(setq org-latex-create-formula-image-program 'dvisvgm)
-(setq org-hide-leading-stars t)
-(setq org-todo-keywords '((sequence "TODO" "PENDING" "|" "DONE")))
-(require 'ox-md) ;; Markdown exporter
+(use-package org
+  :ensure nil
+  :hook
+  (org-mode . buffer-face-mode)
+  (org-mode . (lambda ()
+                (setq org-format-latex-options
+                      (plist-put org-format-latex-options :scale 1.7))))
+  :config
+  (setq org-hide-leading-stars t)
+  (setq org-todo-keywords '((sequence "TODO" "PENDING" "|" "DONE")))
+  (setq org-latex-create-formula-image-program 'dvisvgm)
+  )
+;; Org Markdown exporter
+(use-package ox-md
+  :after org
+  :ensure nil)
 
 ;; Eglot
 (use-package eglot
@@ -285,6 +298,7 @@
   :after yasnippet)
 
 (use-package emacs
+  :ensure nil
   :init
   ;; TAB cycle if there are only few candidates
   (setq completion-cycle-threshold 3)
@@ -311,27 +325,29 @@
 (use-package rg
   :ensure t)
 
-(require 'treesit)
-(setq treesit-extra-load-path '("/Users/norman/Code/tree-sitter-module/dist"))
-;; (add-to-list 'treesit-language-source-alist '(c "https://github.com/tree-sitter/tree-sitter-c"))
-;; (add-to-list 'treesit-language-source-alist '(cpp "https://github.com/tree-sitter/tree-sitter-cpp"))
+(use-package treesit
+  :ensure nil
+  :config
+  (setq treesit-extra-load-path '("/Users/norman/Code/tree-sitter-module/dist"))
+  (setq treesit-font-lock-level 4))
 
 ;; C/C++
-(setq c-basic-offset 4)
-(setq c-default-style "stroustrup")
-(setq treesit-font-lock-level 4)
-(add-hook 'c++-ts-mode-hook
-          (lambda () (define-key
-                      c++-ts-mode-map
-                      (kbd "M-[")
-                      (sp-restrict-to-pairs-interactive "{" 'sp-down-sexp))))
-(add-hook 'emacs-lisp-mode-hook
-          (lambda () (sp-local-pair 'emacs-lisp-mode "'" nil :actions nil)))
+(use-package cc-mode
+  :ensure nil
+  :config
+  (setq c-basic-offset 4)
+  (setq c-default-style "stroustrup"))
 
-;; (add-hook 'prog-mode-hook 'electric-pair-mode)
-;; TODO: superflous w/ rainbow-delimiters?
-;; (show-paren-mode 1)
+(use-package c-ts-mode
+  :after cc-mode
+  :ensure nil
+  :hook
+  (c++-ts-mode . (lambda () (define-key
+                             c++-ts-mode-map
+                             (kbd "M-[")
+                             (sp-restrict-to-pairs-interactive "{" 'sp-down-sexp)))))
 
 (require 'sane-defaults)
+
 (put 'scroll-left 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
