@@ -370,3 +370,9 @@
 
 (put 'scroll-left 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
+
+;; Rebind for Colemak
+(global-unset-key (kbd "C-e"))
+(global-set-key (kbd "C-e") 'previous-line)
+(global-unset-key (kbd "C-p"))
+(global-set-key (kbd "C-p") 'end-of-line)
