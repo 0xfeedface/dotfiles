@@ -98,6 +98,17 @@
 ;; (add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
 
+(use-package mood-line
+  :ensure t
+  :custom
+  (mood-line-show-eol-style t)
+  (mood-line-show-encoding-information t)
+  :config (mood-line-mode))
+
+(use-package which-func
+  :ensure nil
+  :hook (prog-mode . which-function-mode))
+
 (use-package whitespace
   :ensure nil
   :config
