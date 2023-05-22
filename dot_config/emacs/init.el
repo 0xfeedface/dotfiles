@@ -77,7 +77,8 @@
 
 ;; Ad-hoc theme
 (custom-set-faces
- '(font-lock-comment-face ((t (:foreground "#8f8f8f"))))
+ '(default ((t (:foreground "#111111" :background "#f8f8f8"))))
+ '(font-lock-comment-face ((t (:foreground "#909090"))))
  '(font-lock-comment-delimiter-face ((t (:inherit 'font-lock-comment-face))))
  '(font-lock-string-face ((t (:foreground "ForestGreen")))) ;VioletRed4
  '(font-lock-builtin-face ((t (:foreground "sienna"))))
