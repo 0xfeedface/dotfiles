@@ -67,7 +67,7 @@
 
 (if (eq system-type 'darwin)
     (set-face-attribute 'default nil :height 170)
-  (set-face-attribute 'default nil :height 140))
+  (set-face-attribute 'default nil :font "Iosevka Custom Fixed Slab Medium" :height 140))
 
 ;; Make shebang (#!) files executable when saved
 (add-hook 'after-save-hook #'executable-make-buffer-file-executable-if-script-p)
