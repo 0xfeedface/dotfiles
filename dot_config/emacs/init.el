@@ -361,7 +361,10 @@
   (c++-ts-mode . (lambda () (define-key
                              c++-ts-mode-map
                              (kbd "M-[")
-                             (sp-restrict-to-pairs-interactive "{" 'sp-down-sexp)))))
+                             (sp-restrict-to-pairs-interactive "{" 'sp-down-sexp))))
+  :config
+  (setq c-ts-mode-indent-offset c-basic-offset
+        c-ts-mode-indent-style c-default-style))
 
 (require 'sane-defaults)
 
