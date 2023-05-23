@@ -281,6 +281,13 @@
   :after org
   :ensure nil)
 
+;; Org-Roam
+(use-package org-roam
+  :ensure t
+  :config
+  (setq org-roam-directory (file-truename "~/Roam/"))
+  (org-roam-db-autosync-mode))
+
 ;; Eglot
 (use-package eglot
   :ensure nil
@@ -302,7 +309,10 @@
 
 ;; Magit
 (use-package magit
-  :ensure t)
+  :ensure t
+  :bind (:map magit-mode-map (("e" . magit-section-backward)
+                              ("p" . magit-ediff-dwim)
+                              ("M-e" . magit-section-backward-sibling))))
 
 ;; Yasnippets
 (use-package yasnippet
@@ -372,6 +382,8 @@
 (put 'narrow-to-region 'disabled nil)
 
 ;; Rebind for Colemak
+(global-unset-key (kbd "M-e"))
+(global-set-key (kbd "M-p") 'forward-sentence)
 (global-unset-key (kbd "C-e"))
 (global-set-key (kbd "C-e") 'previous-line)
 (global-unset-key (kbd "C-p"))
