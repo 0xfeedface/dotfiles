@@ -74,6 +74,7 @@
 
 (add-to-list 'major-mode-remap-alist '(c-mode . c-ts-mode))
 (add-to-list 'major-mode-remap-alist '(c++-mode . c++-ts-mode))
+(add-to-list 'major-mode-remap-alist '(cmake-mode . cmake-ts-mode))
 
 (load-theme 'default-dark t)
 
@@ -371,6 +372,9 @@
          ("C-c ," . crux-find-user-custom-file)
          ("C-^" . crux-top-join-line)
          ("M-o" . crux-other-window-or-switch-buffer)))
+
+(use-package cmake-mode
+  :ensure t)
 
 (require 'sane-defaults)
 
