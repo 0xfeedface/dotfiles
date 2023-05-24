@@ -364,8 +364,9 @@
 (use-package crux
   :ensure t
   :bind (("C-k" . crux-smart-kill-line)
+         ("C-S-k" . kill-line)
          ("C-o" . crux-smart-open-line)
-         ("M-S-o" . crux-smart-open-line-above)
+         ("C-S-o" . crux-smart-open-line-above)
          ("C-x 4 t" . crux-transpose-windows)
          ("C-c d" . crux-duplicate-current-line-or-region)
          ("C-c I" . crux-find-user-init-file)
