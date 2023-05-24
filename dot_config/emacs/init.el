@@ -360,6 +360,18 @@
   (setq c-ts-mode-indent-offset c-basic-offset
         c-ts-mode-indent-style c-default-style))
 
+(use-package crux
+  :ensure t
+  :bind (("C-k" . crux-smart-kill-line)
+         ("C-o" . crux-smart-open-line)
+         ("M-S-o" . crux-smart-open-line-above)
+         ("C-x 4 t" . crux-transpose-windows)
+         ("C-c d" . crux-duplicate-current-line-or-region)
+         ("C-c I" . crux-find-user-init-file)
+         ("C-c ," . crux-find-user-custom-file)
+         ("C-^" . crux-top-join-line)
+         ("M-o" . crux-other-window-or-switch-buffer)))
+
 (require 'sane-defaults)
 
 (put 'scroll-left 'disabled nil)
@@ -372,3 +384,5 @@
 (global-set-key (kbd "C-e") 'previous-line)
 (global-unset-key (kbd "C-p"))
 (global-set-key (kbd "C-p") 'end-of-line)
+
+(keymap-global-set "C-x K" 'kill-this-buffer)
