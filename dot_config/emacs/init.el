@@ -76,7 +76,7 @@
 (add-to-list 'major-mode-remap-alist '(c++-mode . c++-ts-mode))
 (add-to-list 'major-mode-remap-alist '(cmake-mode . cmake-ts-mode))
 
-(load-theme 'default-dark t)
+(load-theme 'permutation t)
 
 (require 'package)
 (setq package-enable-at-startup nil)
