@@ -361,6 +361,9 @@
   (setq c-ts-mode-indent-offset c-basic-offset
         c-ts-mode-indent-style c-default-style))
 
+(use-package avy
+  :ensure t)
+
 (use-package crux
   :ensure t
   :bind (("C-k" . crux-smart-kill-line)
@@ -375,7 +378,29 @@
          ("M-o" . crux-other-window-or-switch-buffer)))
 
 (use-package cmake-mode
-  :ensure t)
+  :ensure t
+  :bind (([remap goto-line] . avy-goto-line)
+         ("C-'" . avy-goto-char-timer)))
+
+(use-package deadgrep
+  :ensure t
+  :custom
+  (avy-keys '(?a ?r ?s ?t ?n ?e ?i ?o))
+  (avy-style 'de-bruijn)
+  (avy-background t)
+  (avy-timeout-seconds 1.0)
+  (avy-orders-alist '((avy-goto-char-timer . avy-order-closest)))
+  :bind (:map deadgrep-mode-map
+              ("e" . deadgrep-backward-match)
+              ("M-e" . deadgrep-backward-filename)))
+
+(use-package visual-regexp
+  :ensure t
+  :bind (([remap query-replace-regexp] . vr/query-replace)))
+
+(use-package zzz-to-char
+  :ensure t
+  :bind (([remap zap-to-char] . 'zzz-up-to-char)))
 
 (require 'sane-defaults)
 
