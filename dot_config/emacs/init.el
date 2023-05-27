@@ -344,7 +344,6 @@
 ;; C/C++
 (use-package cc-mode
   :ensure nil
-  :bind (:map c++-ts-mode-map ("M-o" . ff-find-other-file))
   :config
   (setq c-basic-offset 4)
   (setq c-default-style "stroustrup"))
@@ -361,8 +360,14 @@
   (setq c-ts-mode-indent-offset c-basic-offset
         c-ts-mode-indent-style c-default-style))
 
+(use-package find-file
+  :ensure nil
+  :bind (:map c++-ts-mode-map ("C-c o" . ff-find-other-file)))
+
 (use-package avy
-  :ensure t)
+  :ensure t
+  :bind (([remap goto-line] . avy-goto-line)
+         ("C-'" . avy-goto-char-timer)))
 
 (use-package crux
   :ensure t
@@ -378,9 +383,7 @@
          ("M-o" . crux-other-window-or-switch-buffer)))
 
 (use-package cmake-mode
-  :ensure t
-  :bind (([remap goto-line] . avy-goto-line)
-         ("C-'" . avy-goto-char-timer)))
+  :ensure t)
 
 (use-package deadgrep
   :ensure t
@@ -388,7 +391,7 @@
   (avy-keys '(?a ?r ?s ?t ?n ?e ?i ?o))
   (avy-style 'de-bruijn)
   (avy-background t)
-  (avy-timeout-seconds 1.0)
+  (avy-timeout-seconds 0.25)
   (avy-orders-alist '((avy-goto-char-timer . avy-order-closest)))
   :bind (:map deadgrep-mode-map
               ("e" . deadgrep-backward-match)
