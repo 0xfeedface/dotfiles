@@ -71,9 +71,12 @@ call plug#begin()
 
   " Classic Vim plug-ins
   Plug 'bkad/CamelCaseMotion'
-  " Plug 'jiangmiao/auto-pairs'
   Plug 'tibabit/vim-templates'
   Plug 'ziglang/zig.vim'
+{{ if (eq .chezmoi.hostname "thinkpad") }}
+  Plug 'glench/vim-jinja2-syntax'
+  Plug 'aklt/plantuml-syntax'
+{{- end }}
 
   Plug 'vim-airline/vim-airline'
   Plug 'vim-airline/vim-airline-themes'
@@ -89,20 +92,18 @@ call plug#end()
 
 lua <<EOF
 require'nvim-treesitter.configs'.setup {
-  ensure_installed = { 'c', 'cpp', 'python', 'vim', 'lua' },
+  ensure_installed = { 'c', 'cpp', 'python', 'vim', 'lua', 'comment' },
   highlight = {
     enable = true,
-    custom_captures = {
-      ['keyword.auto'] = 'Type'
-    }
   },
   incremental_selection = { enable = true },
-  indent = { enable = false },
+  indent = { enable = true },
 }
 
 require'Comment'.setup {
   mappings = {
-    extended = true
+    -- https://github.com/numToStr/Comment.nvim/wiki/Extended-Keybindings
+    -- extended = true
   }
 }
 
@@ -124,10 +125,16 @@ EOF
 lua <<EOF
 local cmp = require'cmp'
 cmp.setup({
-    sources = {
+    sources = cmp.config.sources({
         { name = 'nvim_lsp' },
         -- { name = 'buffer' },
-    },
+    }),
+    mapping = cmp.mapping.preset.insert({
+      ['<C-n>'] = cmp.mapping.select_next_item(),
+      ['<C-p>'] = cmp.mapping.select_prev_item(),
+      ['<C-z>'] = cmp.mapping.confirm(),
+      ['<C-e>'] = cmp.mapping.abort(),
+    }),
     experimental = {
     }
 })
@@ -137,6 +144,7 @@ lua <<EOF
 local set_mappings = function (client, bufnr)
   -- vim.api.nvim_buf_set_keymap(bufnr, 'n' , 'gd', '<cmd>lua vim.lsp.buf.definition()<cr>', { noremap=true })
   vim.api.nvim_buf_set_keymap(bufnr, 'n' , 'gd', '<cmd>lua require("telescope.builtin").lsp_definitions()<cr>', { noremap=true })
+  vim.api.nvim_buf_set_keymap(bufnr, 'n' , 'gds', '<cmd>lua require("telescope.builtin").lsp_definitions({jump_type="split"})<cr>', { noremap=true })
   vim.api.nvim_buf_set_keymap(bufnr, 'n' , 'gD', '<cmd>lua vim.lsp.buf.declaration()<cr>', { noremap=true })
   vim.api.nvim_buf_set_keymap(bufnr, 'n' , 'K', '<cmd>lua vim.lsp.buf.hover()<cr>', { noremap=true })
   -- vim.api.nvim_buf_set_keymap(bufnr, 'n' , 'gi', '<cmd>lua vim.lsp.buf.implementation()<cr>', { noremap=true })
@@ -145,15 +153,21 @@ local set_mappings = function (client, bufnr)
   -- vim.api.nvim_buf_set_keymap(bufnr, 'n' , 'gr', '<cmd>lua vim.lsp.buf.references()<cr>', { noremap=true })
   vim.api.nvim_buf_set_keymap(bufnr, 'n' , 'gr', '<cmd>lua require("telescope.builtin").lsp_references()<cr>', { noremap=true })
 
-  if client.resolved_capabilities.type_definition == true then
+  if client.server_capabilities.typeDefinitionProvider == true then
     vim.api.nvim_buf_set_keymap(bufnr, 'n' , 'gt', '<cmd>lua vim.lsp.buf.type_definition()<cr>', { noremap=true })
   end
 
   vim.api.nvim_buf_set_keymap(bufnr, 'n' , '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<cr>', { noremap=true })
 
-  if client.resolved_capabilities.document_formatting == true then
+  if client.server_capabilities.documentFormattingProvider == true then
     vim.api.nvim_buf_set_option(bufnr, "formatexpr", "v:lua.vim.lsp.formatexpr()")
-    vim.api.nvim_buf_set_keymap(bufnr, 'n' , 'gQ', '<cmd>lua vim.lsp.buf.formatting()<cr>', { noremap=true })
+    vim.api.nvim_buf_set_keymap(bufnr, 'n' , 'gQ', '<cmd>lua vim.lsp.buf.format()<cr>', { noremap=true })
+  end
+
+  if client.server_capabilities.callHierarchyProvider == true then
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gh', '<cmd>lua require"telescope.builtin".lsp_incoming_calls()<cr>', { noremap=true})
+    -- TODO: not implemented in clangd yet
+    -- vim.api.nvim_buf_set_keymap(bufnr, 'n', 'xxx', '<cmd>lua require"telescope.builtin".lsp_outgoing_calls()<cr>', { noremap=true})
   end
 end
 
@@ -163,10 +177,7 @@ require'lspconfig'.clangd.setup{
     debounce_text_changes = 500
   },
   root_dir = util.root_pattern('compile_commands.json'),
-  cmd = {
-    'clangd',
-    '--cross-file-rename',
-  },
+  cmd = { 'clangd', '--cross-file-rename', },
   capabilities = {
     textDocument = {
       semanticHighLightingCapabilities = {
@@ -191,15 +202,50 @@ require'lspconfig'.pyright.setup{
     pythonPath = '/usr/bin/python'
 {{- end }}
   },
-  on_attach = function (client, buffnr)
+  on_attach = function (client, bufnr)
+    set_mappings(client, bufnr)
+  end
+}
+
+require'lspconfig'.gopls.setup{
+  cmd = {'/usr/bin/gopls', 'serve'},
+  settings = {
+    gopls = {
+      analyses = {
+        unusedparams = true
+      },
+      staticcheck = true,
+      linksInHover = false,
+      codelenses = {
+        generate = true,
+        gc_details = true,
+        regenerate_cgo = true,
+        tidy = true,
+        upgrade_depdendency = true,
+        vendor = true,
+      },
+      usePlaceholders = true,
+    }
+  },
+  on_attach = function (client, bufnr)
     set_mappings(client, bufnr)
   end
 }
 
 require'null-ls'.setup {
   on_attach = set_mappings,
+  -- debug = true,
   sources = {
-      require'null-ls'.builtins.formatting.yapf
+    -- TODO: buf, mypy, shellcheck, sqlfluff, tidy, yamllint, jq, protolint, rustfmt, stylua
+    require'null-ls'.builtins.formatting.jq,
+    require'null-ls'.builtins.formatting.stylua.with({
+      extra_args = {'--indent-type', 'Spaces', '--indent-width', '2'}
+    }),
+    require'null-ls'.builtins.formatting.yapf.with({
+      cwd = function (params)
+        return vim.fn.getcwd()
+      end
+    })
   },
 }
 EOF
@@ -258,6 +304,8 @@ colorscheme NeoSolarized
 
 " Disable line wrapping
 set nowrap
+" Number of lines of context for vertical scrolling
+set scrolloff=0
 " Number of columns of context for horizontal scrolling
 set sidescrolloff=2
 
@@ -299,9 +347,6 @@ set mouse=a
 " Number formats for <c-a> and <c-x>
 " NeoVim default: bin,hex
 set nrformats=alpha,hex
-
-" Minimum distance of current line from window top or bottom
-set scrolloff=2
 
 " Disable folding
 set nofoldenable
@@ -372,11 +417,6 @@ set dir=~/.local/share/nvim/swap
 " Yank to the end of the current line
 map Y y$
 
-" Use CTRL-l instead of Escape
-inoremap <c-b> <esc>
-inoremap <esc> <nop>
-inoremap <c-c> <nop>
-
 " Easier window navigation
 nnoremap <c-j> <c-w><c-j>
 nnoremap <c-k> <c-w><c-k>
@@ -385,7 +425,9 @@ nnoremap <c-h> <c-w><c-h>
 
 " Easier tab navigation
 nnoremap th :tabprev<cr>
+nnoremap t<left> :tabprev<cr>
 nnoremap tl :tabnext<cr>
+nnoremap t<right> :tabnext<cr>
 
 " Emulate [[, [], ][, ]] on an ANSI keyboard
 " nnoremap üü [[
@@ -447,6 +489,9 @@ if (has("autocmd"))
   autocmd! FileType xml,xslt,css,tex,json,sh,yaml,sql setlocal ts=2 sts=2 sw=2 expandtab
   autocmd! FileType vim setlocal ts=2 sts=2 sw=2 expandtab
   autocmd! FileType lua setlocal ts=2 sts=2 sw=2 expandtab
+  autocmd! FileType template setlocal ts=2 sts=2 sw=2 expandtab
+  autocmd! FileType yaml,sql setlocal iskeyword+=-
+  autocmd! FileType go setlocal noexpandtab
 endif  " autocmd
 
 "----------------------------------------------------------------------------

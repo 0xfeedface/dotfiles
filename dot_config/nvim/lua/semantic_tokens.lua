@@ -64,7 +64,7 @@ local token_kind_to_highlight_group = {
   ["DependentType"] = "Type",
   ["DependentName"] = "Normal",
   ["Namespace"] = "Normal",
-  ["TemplateParameter"] = "Normal",
+  ["TemplateParameter"] = "Type",
   ["Concept"] = "Normal",
   -- auto is sometimes a primitive
   ["Primitive"] = "Type",
@@ -107,6 +107,7 @@ function M.get_highlight_callback(bufnr)
         start = delta_start
       end
 
+      -- print(token_kind)
       vim.api.nvim_buf_add_highlight(
         bufnr,
         M.hl_namespace,
