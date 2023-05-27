@@ -36,7 +36,12 @@
 (setq set-fringe-mode 30)
 
 ;; Set default face
-(set-face-attribute 'default nil :font "Iosevka Custom Fixed Slab")
+(setq font-family "Iosevka Custom Fixed Slab"
+      font-height 170)
+(when (eq system-type 'gnu/linux)
+  (setq font-family (format "%s Medium" font-family)
+	font-height 140))
+(set-face-attribute 'default nil :font font-family :height font-height)
 
 ;; Use spaces instead of tabs for indentation
 (setq-default indent-tabs-mode nil)
@@ -64,10 +69,6 @@
   (add-to-list 'exec-path "/opt/homebrew/opt/llvm/bin")
   (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
   (add-to-list 'default-frame-alist '(ns-appearance . dark)))
-
-(if (eq system-type 'darwin)
-    (set-face-attribute 'default nil :height 170)
-  (set-face-attribute 'default nil :font "Iosevka Custom Fixed Slab Medium" :height 140))
 
 ;; Make shebang (#!) files executable when saved
 (add-hook 'after-save-hook #'executable-make-buffer-file-executable-if-script-p)
