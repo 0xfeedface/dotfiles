@@ -197,6 +197,9 @@
   (completion-category-overrides '((file (styles . (basic partial-completion flex initials)))))
   )
 
+(use-package consult
+  :ensure t)
+
 (use-package embark
   :disabled
   :config
