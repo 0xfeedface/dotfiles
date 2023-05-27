@@ -174,10 +174,10 @@
   (savehist-mode))
 
 ;; Show num matches for Isearch
-(use-package anzu
-  :ensure t
+(use-package isearch
+  :ensure nil
   :config
-  (global-anzu-mode 1))
+  (setq isearch-lazy-count t))
 
 ;; Prefix key help
 (use-package which-key
