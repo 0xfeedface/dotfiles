@@ -11,7 +11,9 @@ font_size 18.0
 initial_window_width  100c
 initial_window_height 42c
 {{- else if (eq .chezmoi.os "linux") }}
-font_size 12.5
+font_size 14
+initial_window_width  138c
+initial_window_height 46c
 {{- end }}
 
 remember_window_size  no
@@ -84,7 +86,7 @@ editor /usr/bin/nvim
 resize_draw_strategy static
 {{- end }}
 
-map cmd+enter launch --location=vsplit
+map cmd+ctrl+enter launch --location=vsplit
 map cmd+shift+enter launch --location=hsplit
 
 map cmd+h neighboring_window left
@@ -100,6 +102,8 @@ map cmd+shift+j move_window down
 enabled_layouts splits
 enable_audio_bell no
 
+scrollback_lines 1000000
+
 detect_urls no
 
 {{- if (eq .chezmoi.os "linux") }}
@@ -110,3 +114,5 @@ map super+w close_tab
 map super+ctrl+h previous_tab
 map super+ctrl+l next_tab
 map super+ctrl+t set_tab_title
+map super+ctrl+. move_tab_forward
+map super+ctrl+, move_tab_backward
