@@ -24,16 +24,20 @@
     default = current
 
 [pull]
-	rebase = true
+  rebase = true
 
 [core]
-	excludesFile = ~/.gitignore
+  excludesFile = ~/.gitignore
 
 [init]
-	defaultBranch = main
+  defaultBranch = main
 
 [diff]
-	tool = meld
+  tool = meld
 
 [merge]
-	tool = meld
+  tool = meld
+  conflictStyle = diff3
+
+[submodule]
+  recurse = true
