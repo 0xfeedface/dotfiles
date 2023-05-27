@@ -91,7 +91,9 @@
   (mood-line-show-encoding-information t)
   :config (mood-line-mode))
 
+;; FIXME: this is very slow in C++ w/ Eglot enabled
 (use-package which-func
+  :disabled
   :ensure nil
   :hook (prog-mode . which-function-mode))
 
