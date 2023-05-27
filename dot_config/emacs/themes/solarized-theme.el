@@ -160,11 +160,15 @@
   (org-headline-done (:foreground nil))
   (org-date (:foreground solarized-cyan))
   (org-link (:foreground solarized-cyan))
+  (org-verbatim ())
+  (org-code ())
+  (org-bold (:bold t))
+  (org-italic (:italic t))
+  (org-list-dt (:bold t))
   (org-checkbox (:foreground solarized-base1))
   (org-document-title (:foreground solarized-magenta))
   (org-document-info (:inherit 'default))
-  (org-document-info-keyword (:foreground solarized-base01))
-  (org-list-dt (:foreground solarized-base0))
+  (org-document-info-keyword (:inherit 'font-lock-comment-face))
 
   ;; Rainbow delimiters-mode
   (rainbow-delimiters-base-face (:inherit 'default))

@@ -1,7 +1,7 @@
 (deftheme permutation)
 (custom-theme-set-faces
  'permutation
- '(default ((t (:foreground "#f8f8f8" :background "#111111"))))
+ '(default ((t (:foreground "#111111" :background "#f8f8f8"))))
  '(font-lock-comment-face ((t (:foreground "#909090"))))
  '(font-lock-comment-delimiter-face ((t (:inherit 'font-lock-comment-face))))
  '(font-lock-string-face ((t (:foreground "ForestGreen")))) ;VioletRed4
