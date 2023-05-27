@@ -4,6 +4,7 @@ export FZF_DEFAULT_COMMAND='rg --files-with-matches ""'
 export FZF_DEFAULT_OPTS='
     --color fg:-1,fg+:7,bg:-1,bg+:0,hl:4,hl+:-1
     --color info:-1,prompt:-1,spinner:-1,pointer:-1,marker:-1
+    --no-separator
 '
 
 setopt histignorealldups incappendhistory sharehistory histreduceblanks histignorespace
@@ -12,6 +13,10 @@ setopt histignorealldups incappendhistory sharehistory histreduceblanks histigno
 export VAULT_ADDR='https://vault.linguee.internal'
 export ANSIBLE_BECOME_ASK_PASS=False
 export DEEPL_USER=nhzhssh
+export REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-bundle.crt
+
+typeset -U fpath
+fpath=(~/.zfunc $fpath)
 
 setopt autocd
 cdpath=($HOME/deepl)
@@ -25,22 +30,13 @@ HISTSIZE=16384
 SAVEHIST=16384
 HISTFILE=~/.zsh_history
 
-# Vim keybindings for zle
-bindkey -v
-# Shorter timeout when switching to normal mode
-export KEYTIMEOUT=10
-# Still use Emacs bindings for history search
-bindkey '^r' history-incremental-search-backward
-# bindkey ';5C' forward-word
-# bindkey ';5D' backward-word
-# WORDCHARS='*?.[]~&!#$%^(){}<>'
-
 {{ if (eq .chezmoi.os "linux") }}
 export -TU LD_LIBRARY_PATH ldlibrarypath
 ldlibrarypath=($ldlibrarypath /usr/local/lib)
 
 path=(~/.local/bin $path)
 path=(~/.cargo/bin $path)
+path=(~/.go/bin $path)
 
 eval "$(dircolors ~/.dircolors)"
 
@@ -65,6 +61,7 @@ alias l=' ls -CF'
 alias c=' reset && clear'
 alias cm='chezmoi'
 alias tmux='tmux -u'
+alias d='dirs -v'
 
 {{ if (eq (index .chezmoi.osRelease "id") "arch") }}
 alias pacman='pacman --color=auto'
@@ -113,8 +110,22 @@ PROMPT="%F{6}%~%F{14} %# "
 RPS1=' '
 RPROMPT='${vcs_info_msg_0_}'
 
-VIM_MODE_VICMD_KEY='^B'
-[ -f ~/.local/share/zsh/vim-mode/zsh-vim-mode.plugin.zsh ] && source ~/.local/share/zsh/vim-mode/zsh-vim-mode.plugin.zsh
+# Emacs key bindings (with Colemak changes)
+bindkey -e
+bindkey '^P' end-of-line
+bindkey '^E' up-line-or-history
+
+# Vim keybindings for zle
+## bindkey -v
+# Shoster timeout when switching to normal mode
+## export KEYTIMEOUT=10
+# Still use Emacs bindings for history search
+## bindkey '^r' history-incremental-search-backward
+## bindkey ';5C' forward-word
+## bindkey ';5D' backward-word
+## WORDCHARS='*?.[]~&!#$%^(){}<>'
+## VIM_MODE_VICMD_KEY='^B'
+## [ -f ~/.local/share/zsh/vim-mode/zsh-vim-mode.plugin.zsh ] && source ~/.local/share/zsh/vim-mode/zsh-vim-mode.plugin.zsh
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 [ -f ~/.pyenv.zsh ] && source ~/.pyenv.zsh
