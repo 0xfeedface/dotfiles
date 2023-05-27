@@ -415,4 +415,6 @@
 (global-unset-key (kbd "C-p"))
 (global-set-key (kbd "C-p") 'end-of-line)
 
+(keymap-global-unset "M-f")
+(keymap-global-set "M-f" 'forward-to-word)
 (keymap-global-set "C-x K" 'kill-this-buffer)
