@@ -1,8 +1,9 @@
 ;; Turn off mouse interface early in startup to avoid momentary display
-(if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 (if (fboundp 'tooltip-mode) (tooltip-mode -1))
+(when (not (eq system-type 'darwin))
+  (if (fboundp 'menu-bar-mode) (menu-bar-mode -1)))
 
 ;; Disable splash screen
 (setq inhibit-startup-message t)
@@ -90,6 +91,7 @@
   :custom
   (mood-line-show-eol-style t)
   (mood-line-show-encoding-information t)
+  (mood-line-glyph-alist mood-line-glyphs-unicode)
   :config (mood-line-mode))
 
 ;; FIXME: this is very slow in C++ w/ Eglot enabled
@@ -124,7 +126,12 @@
               ("C-<down>" . sp-backward-down-sexp)
               ("C-<up>" . sp-backward-up-sexp)
               ("M-<down>" . sp-down-sexp)
-              ("M-<up>" . sp-up-sexp))
+              ("M-<up>" . sp-up-sexp)
+              ("C-c s u" . sp-unwrap-sexp)
+              ("C-c s r" . sp-rewrap-sexp)
+              ("C-c s {" . sp-wrap-curly)
+              ("C-c s (" . sp-wrap-round)
+              ("C-c s [" . sp-wrap-square))
   ;; ("M-[" . '(sp-restrict-to-pairs-interactive "{" 'sp-down-sexp))
   :custom
   (sp-navigate-reindent-after-up nil)
@@ -195,8 +202,7 @@
   ;; (orderless-matching-styles '(orderless-literal orderless-regexp))
   (orderless-matching-styles '(orderless-literal orderless-flex))
   (completion-styles '(orderless basic))
-  (completion-category-overrides '((file (styles . (basic partial-completion flex initials)))))
-  )
+  (completion-category-overrides '((file (styles . (basic partial-completion flex initials))))))
 
 (use-package consult
   :ensure t)
@@ -204,8 +210,8 @@
 (use-package embark
   :disabled
   :config
-  (global-set-key [remap describe-bindings] #'embark-bindings)
-  (global-set-key (kbd "C-.") 'embark-act)
+  (keymap-set-global [remap describe-bindings] #'embark-bindings)
+  (keymap-set-global "C-." 'embark-act)
   (with-eval-after-load 'embark-consult
   (add-hook 'embark-collect-mode-hook #'consult-preview-at-point-mode))
 
@@ -411,19 +417,24 @@
   :ensure t
   :bind (([remap zap-to-char] . 'zzz-up-to-char)))
 
+(use-package help-mode
+  :ensure nil
+  :bind (:map help-mode-map ("e" . help-goto-previous-page)))
+
 (require 'sane-defaults)
+
+;; Rebind for Colemak
+(keymap-global-unset "M-e")
+(keymap-global-set "M-p" 'forward-sentence)
+(keymap-global-unset "C-e")
+(keymap-global-set "C-e" 'previous-line)
+(keymap-global-unset "C-p")
+(keymap-global-set "C-p" 'end-of-line)
+
+(keymap-global-set "M-F" 'forward-to-word)
+(keymap-global-set "M-B" 'backward-to-word)
+(keymap-global-set "C-x K" 'kill-this-buffer)
+(keymap-global-set "M-<delete>" 'kill-word)
 
 (put 'scroll-left 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
-
-;; Rebind for Colemak
-(global-unset-key (kbd "M-e"))
-(global-set-key (kbd "M-p") 'forward-sentence)
-(global-unset-key (kbd "C-e"))
-(global-set-key (kbd "C-e") 'previous-line)
-(global-unset-key (kbd "C-p"))
-(global-set-key (kbd "C-p") 'end-of-line)
-
-(keymap-global-unset "M-f")
-(keymap-global-set "M-f" 'forward-to-word)
-(keymap-global-set "C-x K" 'kill-this-buffer)
