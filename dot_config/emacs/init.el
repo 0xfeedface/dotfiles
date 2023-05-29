@@ -77,6 +77,7 @@
 (add-to-list 'major-mode-remap-alist '(c-mode . c-ts-mode))
 (add-to-list 'major-mode-remap-alist '(c++-mode . c++-ts-mode))
 (add-to-list 'major-mode-remap-alist '(cmake-mode . cmake-ts-mode))
+(add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode))
 
 (load-theme 'permutation t)
 
@@ -119,19 +120,42 @@
   (prog-mode . smartparens-mode)
   (emacs-lisp-mode . (lambda () (sp-local-pair 'emacs-lisp-mode "'" nil :actions nil)))
   :bind (:map smartparens-mode-map
+              ;; Movement
               ("C-f" . sp-forward-symbol)
               ("C-b" . sp-backward-symbol)
               ("C-M-f" . sp-forward-sexp)
               ("C-M-b" . sp-backward-sexp)
-              ("C-<down>" . sp-backward-down-sexp)
-              ("C-<up>" . sp-backward-up-sexp)
-              ("M-<down>" . sp-down-sexp)
-              ("M-<up>" . sp-up-sexp)
+              ("C-M-S-f" . sp-beginning-of-next-sexp)
+              ("C-M-S-b" . sp-end-of-previous-sexp)
+              ("C-M-d" . sp-down-sexp)
+              ("C-M-u" . sp-up-sexp)
+              ("C-M-S-d" . sp-backward-down-sexp)
+              ("C-M-S-u" . sp-backward-up-sexp)
+              ("C-M-n" . sp-next-sexp)
+              ("C-M-e" . sp-previous-sexp)
+              ("C-M-a" . sp-beginning-of-sexp)
+              ("C-M-p" . sp-end-of-sexp)
+              ;; Manipulation
+              ("C-M-k" . sp-kill-sexp)
+              ("C-- C-M-k" . sp-backward-kill-sexp)
+              ("C-M-t" . sp-transpose-sexp)
+              ("C-<right>" . sp-forward-slurp-sexp)
+              ("C-<left>" . sp-forward-barf-sexp)
+              ("C-M-<left>" . sp-backward-slurp-sexp)
+              ("C-M-<right>" . sp-backward-barf-sexp)
+              ;; Wrapping
               ("C-c s u" . sp-unwrap-sexp)
               ("C-c s r" . sp-rewrap-sexp)
               ("C-c s {" . sp-wrap-curly)
               ("C-c s (" . sp-wrap-round)
-              ("C-c s [" . sp-wrap-square))
+              ("C-c s [" . sp-wrap-square)
+              ;; ("" . )
+              ;; ("" . )
+              ;; ("C-<down>" . sp-backward-down-sexp)
+              ;; ("C-<up>" . sp-backward-up-sexp)
+              ;; ("M-<down>" . sp-down-sexp)
+              ;; ("M-<up>" . sp-up-sexp)
+              )
   ;; ("M-[" . '(sp-restrict-to-pairs-interactive "{" 'sp-down-sexp))
   :custom
   (sp-navigate-reindent-after-up nil)
@@ -187,7 +211,10 @@
 (use-package isearch
   :ensure nil
   :config
-  (setq isearch-lazy-count t))
+  (setq isearch-lazy-count t)
+  :bind (:map overriding-terminal-local-map
+              ("M-<up>" . isearch-ring-retreat)
+              ("M-<down>" . isearch-ring-advance)))
 
 ;; Prefix key help
 (use-package which-key
@@ -307,9 +334,12 @@
 ;; Magit
 (use-package magit
   :ensure t
+  :demand t
   :bind (:map magit-mode-map (("e" . magit-section-backward)
                               ("p" . magit-ediff-dwim)
-                              ("M-e" . magit-section-backward-sibling))))
+                              ("M-e" . magit-section-backward-sibling)))
+  :config
+  (add-to-list 'project-switch-commands '(magit-project-status "Magit" ?m)))
 
 ;; Yasnippets
 (use-package yasnippet
@@ -364,17 +394,27 @@
   :after cc-mode
   :ensure nil
   :hook
-  (c++-ts-mode . (lambda () (define-key
-                             c++-ts-mode-map
-                             (kbd "M-[")
-                             (sp-restrict-to-pairs-interactive "{" 'sp-down-sexp))))
+  (c++-ts-mode . (lambda() (keymap-set c++-ts-mode-map
+                                       "M-["
+                                       (sp-restrict-to-pairs-interactive "{" 'sp-down-sexp))))
+  (c++-ts-mode . (lambda() (keymap-set c++-ts-mode-map
+                                       "M-]"
+                                       (sp-restrict-to-pairs-interactive "{" 'sp-backward-up-sexp))))
+  (c++-ts-mode . (lambda() (keymap-set c++-ts-mode-map
+                                       "M-("
+                                       (sp-restrict-to-pairs-interactive "(" 'sp-down-sexp))))
+  (c++-ts-mode . (lambda() (keymap-set c++-ts-mode-map
+                                       "M-)"
+                                       (sp-restrict-to-pairs-interactive ")" 'sp-backward-up-sexp))))
   :config
   (setq c-ts-mode-indent-offset c-basic-offset
         c-ts-mode-indent-style c-default-style))
 
 (use-package find-file
   :ensure nil
-  :bind (:map c++-ts-mode-map ("C-c o" . ff-find-other-file)))
+  :bind (("C-c I" . (lambda () (interactive) (find-file user-init-file)))
+         :map c++-ts-mode-map
+         ("C-c o" . ff-find-other-file)))
 
 (use-package avy
   :ensure t
@@ -389,7 +429,6 @@
          ("C-S-o" . crux-smart-open-line-above)
          ("C-x 4 t" . crux-transpose-windows)
          ("C-c d" . crux-duplicate-current-line-or-region)
-         ("C-c I" . crux-find-user-init-file)
          ("C-c ," . crux-find-user-custom-file)
          ("C-^" . crux-top-join-line)
          ("M-o" . crux-other-window-or-switch-buffer)))
@@ -413,9 +452,13 @@
   :ensure t
   :bind (([remap query-replace-regexp] . vr/query-replace)))
 
+(use-package zop-to-char
+  :ensure t
+  :bind ("C-M-S-z" . 'zop-to-char))
+
 (use-package zzz-to-char
   :ensure t
-  :bind (([remap zap-to-char] . 'zzz-up-to-char)))
+  :bind ("C-M-z" . 'zzz-up-to-char))
 
 (use-package help-mode
   :ensure nil
@@ -423,18 +466,25 @@
 
 (require 'sane-defaults)
 
-;; Rebind for Colemak
-(keymap-global-unset "M-e")
-(keymap-global-set "M-p" 'forward-sentence)
-(keymap-global-unset "C-e")
-(keymap-global-set "C-e" 'previous-line)
-(keymap-global-unset "C-p")
+;; Swap -p and -e bindings for Colemak
 (keymap-global-set "C-p" 'end-of-line)
+(keymap-global-set "C-e" 'previous-line)
+(keymap-global-set "C-M-p" 'end-of-defun)
+(keymap-global-set "C-M-e" 'backward-list)
+(keymap-global-set "M-p" 'forward-sentence)
+(keymap-global-unset "M-e") ; Free it like M-p is normally
 
 (keymap-global-set "M-F" 'forward-to-word)
 (keymap-global-set "M-B" 'backward-to-word)
 (keymap-global-set "C-x K" 'kill-this-buffer)
 (keymap-global-set "M-<delete>" 'kill-word)
+(keymap-global-set "M-z" 'zap-up-to-char)
+(keymap-global-set "M-Z" 'zap-to-char)
+(keymap-global-set "C-<" 'beginning-of-defun)
+(keymap-global-set "C->" 'end-of-defun)
+(keymap-global-set "C-M-<" 'beginning-of-defun-comments)
+;; (keymap-global-set "C-M->" 'end-of-)
+(global-set-key  [remap list-buffers] 'ibuffer)
 
 (put 'scroll-left 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
