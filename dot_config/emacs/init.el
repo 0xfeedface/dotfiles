@@ -216,7 +216,7 @@
   :ensure nil
   :config
   (setq isearch-lazy-count t)
-  :bind (:map overriding-terminal-local-map
+  :bind (:map isearch-mode-map
               ("M-<up>" . isearch-ring-retreat)
               ("M-<down>" . isearch-ring-advance)))
 
@@ -489,6 +489,8 @@
 (keymap-global-set "C-<" 'beginning-of-defun)
 (keymap-global-set "C->" 'end-of-defun)
 (keymap-global-set "C-M-<" 'beginning-of-defun-comments)
+(keymap-global-set "M-n" 'forward-to-indentation)
+(keymap-global-set "M-e" 'backward-to-indentation)
 ;; (keymap-global-set "C-M->" 'end-of-)
 (global-set-key  [remap list-buffers] 'ibuffer)
 
