@@ -37,12 +37,16 @@
 (setq set-fringe-mode 30)
 
 ;; Set default face
-(setq font-family "Iosevka Custom Fixed Slab"
+(setq fixed-pitch-font "Iosevka Custom Fixed Sans"
+      fixed-pitch-serif-font "Iosevka Custom Fixed Slab"
       font-height 170)
 (when (eq system-type 'gnu/linux)
-  (setq font-family (format "%s Medium" font-family)
+  (setq fixed-pitch-font (format "%s Medium" fixed-pitch-font)
+        fixed-pitch-serif-font (format "%s Medium" fixed-pitch-serif-font)
 	font-height 140))
-(set-face-attribute 'default nil :font font-family :height font-height)
+(set-face-attribute 'fixed-pitch nil :font fixed-pitch-font :height font-height)
+(set-face-attribute 'fixed-pitch-serif nil :font fixed-pitch-serif-font :height font-height)
+(set-face-attribute 'default nil :font fixed-pitch-serif-font :height font-height)
 
 ;; Use spaces instead of tabs for indentation
 (setq-default indent-tabs-mode nil)
