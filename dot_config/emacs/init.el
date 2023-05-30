@@ -302,8 +302,7 @@
   :config
   (setq org-hide-leading-stars t)
   (setq org-todo-keywords '((sequence "TODO" "PENDING" "|" "DONE")))
-  (setq org-latex-create-formula-image-program 'dvisvgm)
-  )
+  (setq org-latex-create-formula-image-program 'dvisvgm))
 ;; Org Markdown exporter
 (use-package ox-md
   :after org
