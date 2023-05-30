@@ -54,7 +54,7 @@
 (setq-default display-line-numbers-width 4)
 (setq display-line-numbers-type 'relative
       display-line-numbers-current-absolute t)
-(global-display-line-numbers-mode)
+(add-hook 'prog-mode-hook 'display-line-numbers-mode)
 
 ;; Revert buffers when the underlying file has changed
 (global-auto-revert-mode 1)
@@ -300,9 +300,12 @@
                 (setq org-format-latex-options
                       (plist-put org-format-latex-options :scale 1.7))))
   :config
-  (setq org-hide-leading-stars t)
-  (setq org-todo-keywords '((sequence "TODO" "PENDING" "|" "DONE")))
-  (setq org-latex-create-formula-image-program 'dvisvgm))
+  ;; TODO: consider `org-startup-indented` and `org-adapt-indentation`
+  (setq org-hide-leading-stars t
+        org-startup-folded t
+        org-startup-indented t
+        org-todo-keywords '((sequence "TODO" "PENDING" "|" "DONE"))
+        org-latex-create-formula-image-program 'dvisvgm))
 ;; Org Markdown exporter
 (use-package ox-md
   :after org
