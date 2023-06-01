@@ -238,6 +238,12 @@
 (use-package consult
   :ensure t)
 
+(use-package marginalia
+  :ensure t
+  :bind (:map minibuffer-local-map ("M-A" . marginalia-cycle))
+  :init
+  (marginalia-mode))
+
 (use-package embark
   :disabled
   :config
@@ -330,6 +336,11 @@
   (setq eldoc-echo-area-prefer-doc-buffer t)
   (eldoc-add-command 'c-electric-paren)
   (setq max-mini-window-height 3)
+  :bind (:map eglot-mode-map
+              (("M-q" . eglot-format)
+               ("M-Q" . eglot-format-buffer)
+               ("C-." . eglot-find-implementation)
+               ("C-M-." . eglot-find-declaration)))
   :config
   (add-hook 'eglot-managed-mode-hook (lambda () (eglot-inlay-hints-mode -1)))
   (add-hook 'c++-mode-hook 'eglot-ensure)
@@ -337,20 +348,24 @@
   (add-hook 'python-mode-hook 'eglot-ensure)
   (add-hook 'python-ts-mode-hook 'eglot-ensure))
 
+(use-package project
+  :ensure nil)
+
 ;; Magit
 (use-package magit
   :ensure t
   :demand t
+  :after project
   :bind (:map magit-mode-map (("e" . magit-section-backward)
                               ("p" . magit-ediff-dwim)
                               ("M-e" . magit-section-backward-sibling)))
   :config
   (add-to-list 'project-switch-commands '(magit-project-status "Magit" ?m)))
 
-;; Yasnippets
+;; Yasnippet
 (use-package yasnippet
   :ensure t
-  :hook (prog-mode . yas-minor-mode))
+  :config (yas-global-mode 1))
 (use-package yasnippet-snippets
   :ensure t
   :after yasnippet)
@@ -484,6 +499,7 @@
 (keymap-global-set "M-B" 'backward-to-word)
 (keymap-global-set "C-x K" 'kill-this-buffer)
 (keymap-global-set "M-<delete>" 'kill-word)
+(keymap-global-set "C-<delete>" 'sp-kill-symbol)
 (keymap-global-set "M-z" 'zap-up-to-char)
 (keymap-global-set "M-Z" 'zap-to-char)
 (keymap-global-set "C-<" 'beginning-of-defun)
