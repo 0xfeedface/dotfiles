@@ -38,6 +38,7 @@
 
 ;; Set default face
 (setq fixed-pitch-font "Iosevka Custom Fixed Sans"
+      variable-pitch-font "Iosevka Custom Quasiproportional"
       fixed-pitch-serif-font "Iosevka Custom Fixed Slab"
       font-height 170)
 (when (eq system-type 'gnu/linux)
@@ -45,6 +46,7 @@
         fixed-pitch-serif-font (format "%s Medium" fixed-pitch-serif-font)
 	font-height 140))
 (set-face-attribute 'fixed-pitch nil :font fixed-pitch-font :height font-height)
+(set-face-attribute 'variable-pitch nil :font fixed-pitch-font :height font-height)
 (set-face-attribute 'fixed-pitch-serif nil :font fixed-pitch-serif-font :height font-height)
 (set-face-attribute 'default nil :font fixed-pitch-serif-font :height font-height)
 
@@ -360,7 +362,8 @@
                               ("p" . magit-ediff-dwim)
                               ("M-e" . magit-section-backward-sibling)))
   :config
-  (add-to-list 'project-switch-commands '(magit-project-status "Magit" ?m)))
+  (add-to-list 'project-switch-commands '(magit-project-status "Magit" ?m))
+  (magit-save-repository-buffers nil))
 
 ;; Yasnippet
 (use-package yasnippet
@@ -488,12 +491,12 @@
 (require 'sane-defaults)
 
 ;; Swap -p and -e bindings for Colemak
-(keymap-global-set "C-p" 'end-of-line)
-(keymap-global-set "C-e" 'previous-line)
-(keymap-global-set "C-M-p" 'end-of-defun)
-(keymap-global-set "C-M-e" 'backward-list)
-(keymap-global-set "M-p" 'forward-sentence)
-(keymap-global-unset "M-e") ; Free it like M-p is normally
+(define-key key-translation-map (kbd "C-e") (kbd "C-p"))
+(define-key key-translation-map (kbd "C-p") (kbd "C-e"))
+(define-key key-translation-map (kbd "M-e") (kbd "M-p"))
+(define-key key-translation-map (kbd "M-p") (kbd "M-e"))
+(define-key key-translation-map (kbd "C-M-e") (kbd "C-M-p"))
+(define-key key-translation-map (kbd "C-M-p") (kbd "C-M-e"))
 
 (keymap-global-set "M-F" 'forward-to-word)
 (keymap-global-set "M-B" 'backward-to-word)
@@ -506,7 +509,9 @@
 (keymap-global-set "C->" 'end-of-defun)
 (keymap-global-set "C-M-<" 'beginning-of-defun-comments)
 (keymap-global-set "M-n" 'forward-to-indentation)
-(keymap-global-set "M-e" 'backward-to-indentation)
+(keymap-global-set "M-p" 'backward-to-indentation)
+(keymap-global-set "C-v" 'scroll-up-command)
+(keymap-global-set "C-S-v" 'scroll-down-command)
 ;; (keymap-global-set "C-M->" 'end-of-)
 (global-set-key  [remap list-buffers] 'ibuffer)
 
