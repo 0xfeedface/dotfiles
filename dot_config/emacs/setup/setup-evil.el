@@ -3,6 +3,7 @@
   :init
   (setq evil-want-integration t
         evil-want-keybinding nil
+        evil-disable-insert-state-bindings t
         evil-want-C-i-jump nil
         evil-want-C-u-delete nil
         evil-want-C-u-scroll nil
@@ -10,9 +11,8 @@
         evil-want-C-w-delete t
         evil-want-C-w-in-emacs-state nil
         evil-want-Y-yank-to-eol t
-        evil-disable-insert-state-bindings t
         evil-want-fine-undo t
-        evil-undo-system 'undo-tree)
+        evil-undo-system 'undo-redo)
   :bind (:map evil-normal-state-map (("U" . 'evil-redo)
                                      ("gq" . 'eglot-format)
                                      ("gQ" . 'eglot-format-buffer)
@@ -20,15 +20,43 @@
                                      ("gl" . 'eglot-inlay-hints-mode)))
   :custom
   (evil-overriding-maps '())
+  ;; (evil-mode-line-format nil)
   :config
+  (evil-global-set-key 'motion "/" nil)
+  (evil-global-set-key 'motion "?" nil)
+  (evil-global-set-key 'motion "j" nil)
+  (evil-global-set-key 'motion "h" nil)
+  (evil-global-set-key 'normal "q" nil)
+  (evil-global-set-key 'normal "m" nil)
+  (evil-global-set-key 'normal "e" nil)
+  (evil-global-set-key 'normal "i" nil)
+  (evil-global-set-key 'motion "m" 'evil-backward-char)
+  (evil-global-set-key 'motion "n" 'evil-next-line)
+  (evil-global-set-key 'motion "e" 'evil-previous-line)
+  (evil-global-set-key 'motion "i" 'evil-forward-char)
+  (evil-global-set-key 'normal "l" 'evil-insert)
+  (evil-global-set-key 'normal "j" 'er/expand-region)
+  (evil-global-set-key 'normal "k" 'avy-goto-char-timer)
+  (evil-global-set-key 'normal "h" 'evil-forward-word-end)
+  (evil-global-set-key 'normal "H" 'evil-forward-WORD-end)
+  (evil-set-initial-state 'dired-mode 'emacs)
   (evil-select-search-module 'evil-search-module 'isearch)
   (evil-mode 1))
 
+(use-package evil-snipe
+  :ensure t
+  :after evil
+  :config
+  (evil-snipe-mode +1)
+  (evil-snipe-override-mode +1))
+
 (use-package evil-collection
+  :disabled
   :after evil
   :ensure t
   :custom
   (evil-collection-magit-state 'emacs)
+  (evil-collection-state-denylist '(emacs))
   :config
   (evil-collection-init))
 
@@ -46,7 +74,8 @@
   :after evil
   :ensure t
   :config
-  (evilnc-default-hotkeys nil nil))
+  (evilnc-default-hotkeys nil nil)
+  (evil-global-set-key 'normal "gc" 'evilnc-comment-or-uncomment-lines))
 
 (use-package evil-surround
   :after evil

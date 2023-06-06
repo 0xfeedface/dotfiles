@@ -10,6 +10,7 @@
 
 ;; Store lisp files and thems in subdirs
 (add-to-list 'load-path (expand-file-name "site-lisp" user-emacs-directory))
+(add-to-list 'load-path (expand-file-name "setup" user-emacs-directory))
 (add-to-list 'custom-theme-load-path (expand-file-name "themes" user-emacs-directory))
 
 ;; Keep Emacs Custom-settings in a separate file
@@ -99,6 +100,7 @@
   (mood-line-show-eol-style t)
   (mood-line-show-encoding-information t)
   (mood-line-glyph-alist mood-line-glyphs-unicode)
+  (mood-line-evil-state-alist nil)
   :config (mood-line-mode))
 
 ;; FIXME: this is very slow in C++ w/ Eglot enabled
@@ -182,6 +184,7 @@
 
 ;; Represent undo-history as an actual tree (visualize with C-x u)
 (use-package undo-tree
+  :disabled
   :ensure t
   :custom
   (undo-tree-auto-save-history nil)
@@ -238,7 +241,10 @@
   (completion-category-overrides '((file (styles . (basic partial-completion flex initials))))))
 
 (use-package consult
-  :ensure t)
+  :ensure t
+  :config
+  (setq xref-show-xrefs-function #'consult-xref
+        xref-show-definitions-function #'consult-xref))
 
 (use-package marginalia
   :ensure t
@@ -248,21 +254,17 @@
 
 (use-package embark
   :disabled
+  :ensure t
   :config
-  (keymap-set-global [remap describe-bindings] #'embark-bindings)
-  (keymap-set-global "C-." 'embark-act)
+  (global-set-key [remap describe-bindings] #'embark-bindings)
+  (keymap-global-set "C-." 'embark-act)
   (with-eval-after-load 'embark-consult
-  (add-hook 'embark-collect-mode-hook #'consult-preview-at-point-mode))
-
-  :ensure t)
+    (add-hook 'embark-collect-mode-hook #'consult-preview-at-point-mode)))
 
 (use-package embark-consult
   :disabled
   :after embark
-  :ensure t
-  :bind
-  ("C-s" . consult-line)
-  (:map minibuffer-local-map ("C-r" . 'consult-history)))
+  :ensure t)
 
 ;; In-buffer completion UI
 (use-package corfu
@@ -275,7 +277,7 @@
   (corfu-quit-no-match t)        ;; Never quit, even if there is no match
   ;; (corfu-preview-current nil)    ;; Disable current candidate preview
   ;; (corfu-preselect-first nil)    ;; Disable candidate preselection
-  ;; (corfu-on-exact-match nil)     ;; Configure handling of exact matches
+  (corfu-on-exact-match 'quit)     ;; Configure handling of exact matches
   ;; (corfu-scroll-margin 5)        ;; Use scroll margin
   :init
   (global-corfu-mode)
@@ -417,6 +419,7 @@
 (use-package c-ts-mode
   :after cc-mode
   :ensure nil
+  :bind (:map c++-ts-mode-map (("M-Q" . eglot-format-buffer)))
   :hook
   (c++-ts-mode . (lambda() (keymap-set c++-ts-mode-map
                                        "M-["
@@ -432,7 +435,7 @@
                                        (sp-restrict-to-pairs-interactive ")" 'sp-backward-up-sexp))))
   :config
   (setq c-ts-mode-indent-offset c-basic-offset
-        c-ts-mode-indent-style c-default-style))
+        c-ts-mode-indent-style 'bsd))
 
 (use-package find-file
   :ensure nil
@@ -442,6 +445,12 @@
 
 (use-package avy
   :ensure t
+  :custom
+  (avy-keys '(?a ?r ?s ?t ?n ?e ?i ?o))
+  ;; (avy-style 'de-bruijn)
+  (avy-background t)
+  (avy-timeout-seconds 0.25)
+  (avy-orders-alist '((avy-goto-char-timer . avy-order-closest)))
   :bind (([remap goto-line] . avy-goto-line)
          ("C-'" . avy-goto-char-timer)))
 
@@ -462,15 +471,13 @@
 
 (use-package deadgrep
   :ensure t
-  :custom
-  (avy-keys '(?a ?r ?s ?t ?n ?e ?i ?o))
-  (avy-style 'de-bruijn)
-  (avy-background t)
-  (avy-timeout-seconds 0.25)
-  (avy-orders-alist '((avy-goto-char-timer . avy-order-closest)))
   :bind (:map deadgrep-mode-map
               ("e" . deadgrep-backward-match)
               ("M-e" . deadgrep-backward-filename)))
+
+(use-package wgrep-deadgrep
+  :ensure t
+  :hook (deadgrep-finished . wgrep-deadgrep-setup))
 
 (use-package visual-regexp
   :ensure t
@@ -488,7 +495,22 @@
   :ensure nil
   :bind (:map help-mode-map ("e" . help-goto-previous-page)))
 
+(use-package autoinsert
+  :ensure nil
+  :hook
+  (find-file . auto-insert)
+  :config
+  (setq auto-insert-query nil
+        auto-insert-directory (expand-file-name "auto-insert" user-emacs-directory)
+        auto-insert-alist '((("\\.org\\'" . "Org-Mode file") . "template.org")))
+  (auto-insert-mode))
+
+(use-package dired
+  :ensure nil
+  :config
+  (setf dired-kill-when-opening-new-dired-buffer t))
 (require 'sane-defaults)
+(require 'setup-evil)
 
 ;; Swap -p and -e bindings for Colemak
 (define-key key-translation-map (kbd "C-e") (kbd "C-p"))
@@ -501,8 +523,8 @@
 (keymap-global-set "M-F" 'forward-to-word)
 (keymap-global-set "M-B" 'backward-to-word)
 (keymap-global-set "C-x K" 'kill-this-buffer)
-(keymap-global-set "M-<delete>" 'kill-word)
-(keymap-global-set "C-<delete>" 'sp-kill-symbol)
+;; (keymap-global-set "M-<delete>" 'kill-word)
+;; (keymap-global-set "C-<delete>" 'sp-kill-symbol)
 (keymap-global-set "M-z" 'zap-up-to-char)
 (keymap-global-set "M-Z" 'zap-to-char)
 (keymap-global-set "C-<" 'beginning-of-defun)
@@ -514,6 +536,9 @@
 (keymap-global-set "C-S-v" 'scroll-down-command)
 ;; (keymap-global-set "C-M->" 'end-of-)
 (global-set-key  [remap list-buffers] 'ibuffer)
+
+(keymap-set dired-mode-map "p" 'dired-find-file)
+(keymap-set dired-mode-map "e" 'dired-previous-line)
 
 (put 'scroll-left 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
