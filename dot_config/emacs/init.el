@@ -401,7 +401,9 @@
   :hook (prog-mode . rainbow-delimiters-mode))
 
 (use-package rg
-  :ensure t)
+  :ensure t
+  :custom
+  (rg-command-line-flags '("--hidden")))
 
 (use-package treesit
   :ensure nil
@@ -509,6 +511,15 @@
   :ensure nil
   :config
   (setf dired-kill-when-opening-new-dired-buffer t))
+
+(use-package projectile
+  :ensure t
+  :bind (:map projectile-mode-map
+              ("s-p" . projectile-command-map)
+              ("C-c p" . projectile-command-map))
+  :config
+  (projectile-mode))
+
 (require 'sane-defaults)
 (require 'setup-evil)
 
