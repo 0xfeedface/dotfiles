@@ -453,6 +453,7 @@
   (avy-background t)
   (avy-timeout-seconds 0.25)
   (avy-orders-alist '((avy-goto-char-timer . avy-order-closest)))
+  (avy-all-windows nil)
   :bind (([remap goto-line] . avy-goto-line)
          ("C-'" . avy-goto-char-timer)))
 
@@ -514,9 +515,10 @@
 
 (use-package projectile
   :ensure t
-  :bind (:map projectile-mode-map
-              ("s-p" . projectile-command-map)
-              ("C-c p" . projectile-command-map))
+  :init
+  (setq projectile-switch-project-action #'projectile-dired)
+  :bind-keymap
+  ("C-c p" . projectile-command-map)
   :config
   (projectile-mode))
 
