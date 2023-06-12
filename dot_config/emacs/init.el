@@ -524,6 +524,24 @@
   :config
   (projectile-mode))
 
+(use-package autoinsert
+  :ensure nil
+  :hook
+  (find-file . auto-insert)
+  :config
+  (setq auto-insert-query nil
+        auto-insert-directory (expand-file-name "auto-insert" user-emacs-directory)
+        auto-insert-alist '((("\\.org\\'" . "Org-Mode file") . "template.org")))
+  (auto-insert-mode))
+
+(use-package dired
+  :ensure nil
+  :config
+  (setf dired-kill-when-opening-new-dired-buffer t))
+  ;; :bind (:map dired-mode-map
+  ;;             ("RET" . dired-find-alternate-file)
+  ;;             ("^" . (lambda () (interactive) (find-alternate-file "..")))))
+
 (require 'sane-defaults)
 (require 'setup-evil)
 
