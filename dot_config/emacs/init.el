@@ -219,8 +219,10 @@
 ;; Show num matches for Isearch
 (use-package isearch
   :ensure nil
-  :config
-  (setq isearch-lazy-count t)
+  :custom
+  (isearch-lazy-count t)
+  (isearch-wrap-pause 'no-ding)
+  (isearch-repeat-on-direction-change t)
   :bind (:map isearch-mode-map
               ("M-<up>" . isearch-ring-retreat)
               ("M-<down>" . isearch-ring-advance)))
