@@ -46,10 +46,10 @@
   (setq fixed-pitch-font (format "%s Medium" fixed-pitch-font)
         fixed-pitch-serif-font (format "%s Medium" fixed-pitch-serif-font)
 	font-height 140))
-(set-face-attribute 'fixed-pitch nil :font fixed-pitch-font :height font-height)
-(set-face-attribute 'variable-pitch nil :font fixed-pitch-font :height font-height)
-(set-face-attribute 'fixed-pitch-serif nil :font fixed-pitch-serif-font :height font-height)
 (set-face-attribute 'default nil :font fixed-pitch-serif-font :height font-height)
+(set-face-attribute 'fixed-pitch nil :font fixed-pitch-font)
+(set-face-attribute 'variable-pitch nil :font fixed-pitch-font)
+(set-face-attribute 'fixed-pitch-serif nil :font fixed-pitch-serif-font)
 
 ;; Use spaces instead of tabs for indentation
 (setq-default indent-tabs-mode nil)
@@ -317,7 +317,9 @@
         org-startup-folded t
         org-startup-indented t
         org-todo-keywords '((sequence "TODO" "PENDING" "|" "DONE"))
-        org-latex-create-formula-image-program 'dvisvgm))
+        org-latex-create-formula-image-program 'dvisvgm)
+  :custom
+  (org-hide-emphasis-markers t))
 ;; Org Markdown exporter
 (use-package ox-md
   :after org
@@ -520,7 +522,7 @@
   :init
   (when (file-directory-p "~/deepl")
     (setq projectile-project-search-path '("~/deepl")))
-  (setq projectile-switch-project-action #'projectile-dired)
+  (setq projectile-switch-project-action #'projectile-find-file)
   :bind-keymap
   ("C-c p" . projectile-command-map)
   :config
