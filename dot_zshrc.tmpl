@@ -5,6 +5,7 @@ export FZF_DEFAULT_OPTS='
     --color fg:-1,fg+:7,bg:-1,bg+:0,hl:4,hl+:-1
     --color info:-1,prompt:-1,spinner:-1,pointer:-1,marker:-1
     --no-separator
+    --bind=ctrl-e:up
 '
 
 setopt histignorealldups incappendhistory sharehistory histreduceblanks histignorespace
@@ -129,4 +130,3 @@ WORDCHARS='*?.[]~&!#$%^(){}<>'
 ## [ -f ~/.local/share/zsh/vim-mode/zsh-vim-mode.plugin.zsh ] && source ~/.local/share/zsh/vim-mode/zsh-vim-mode.plugin.zsh
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-[ -f ~/.pyenv.zsh ] && source ~/.pyenv.zsh
