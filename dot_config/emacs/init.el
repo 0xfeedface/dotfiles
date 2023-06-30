@@ -518,6 +518,8 @@
 (use-package projectile
   :ensure t
   :init
+  (when (file-directory-p "~/deepl")
+    (setq projectile-project-search-path '("~/deepl")))
   (setq projectile-switch-project-action #'projectile-dired)
   :bind-keymap
   ("C-c p" . projectile-command-map)
