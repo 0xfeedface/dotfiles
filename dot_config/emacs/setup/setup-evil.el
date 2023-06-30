@@ -12,12 +12,13 @@
         evil-want-C-w-in-emacs-state nil
         evil-want-Y-yank-to-eol t
         evil-want-fine-undo t
-        evil-undo-system 'undo-redo)
+        evil-undo-system 'undo-redo
   :bind (:map evil-normal-state-map (("U" . 'evil-redo)
                                      ("gq" . 'eglot-format)
                                      ("gQ" . 'eglot-format-buffer)
                                      ("gr" . 'eglot-find-references)
-                                     ("gl" . 'eglot-inlay-hints-mode)))
+                                     ("gl" . 'eglot-inlay-hints-mode)
+                                     ("gs" . 'subword-mode)))
   :custom
   (evil-overriding-maps '())
   ;; (evil-mode-line-format nil)
@@ -30,6 +31,7 @@
   (evil-global-set-key 'normal "m" nil)
   (evil-global-set-key 'normal "e" nil)
   (evil-global-set-key 'normal "i" nil)
+  (evil-global-set-key 'normal (kbd "C-r") nil)
   (evil-global-set-key 'normal (kbd "C-.") nil)
   (evil-global-set-key 'normal (kbd "M-.") nil)
   (evil-global-set-key 'motion "m" 'evil-backward-char)
@@ -76,7 +78,6 @@
   :after evil
   :ensure t
   :config
-  (evilnc-default-hotkeys nil nil)
   (evil-global-set-key 'normal "gc" 'evilnc-comment-or-uncomment-lines))
 
 (use-package evil-surround
