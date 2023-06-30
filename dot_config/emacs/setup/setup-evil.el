@@ -30,6 +30,8 @@
   (evil-global-set-key 'normal "m" nil)
   (evil-global-set-key 'normal "e" nil)
   (evil-global-set-key 'normal "i" nil)
+  (evil-global-set-key 'normal (kbd "C-.") nil)
+  (evil-global-set-key 'normal (kbd "M-.") nil)
   (evil-global-set-key 'motion "m" 'evil-backward-char)
   (evil-global-set-key 'motion "n" 'evil-next-line)
   (evil-global-set-key 'motion "e" 'evil-previous-line)
