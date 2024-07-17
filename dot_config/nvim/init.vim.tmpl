@@ -1,3 +1,49 @@
+lua <<EOF
+local modes = { 'n', 'x', 'o' }
+-- left
+vim.keymap.set(modes, 'm', 'h')
+vim.keymap.set(modes, 'M', 'H')
+vim.keymap.set(modes, 'h', 'e')
+vim.keymap.set(modes, 'H', 'E')
+-- down
+vim.keymap.set(modes, 'n', 'j')
+vim.keymap.set(modes, 'N', 'J')
+vim.keymap.set(modes, 'k', 'n')
+vim.keymap.set(modes, 'K', 'N')
+-- up
+vim.keymap.set(modes, 'e', 'k')
+vim.keymap.set(modes, 'E', 'K')
+vim.keymap.set(modes, 'l', 'i')
+vim.keymap.set(modes, 'L', 'I')
+-- right
+vim.keymap.set(modes, 'i', 'l')
+vim.keymap.set(modes, 'I', 'L')
+vim.keymap.set(modes, '', '')
+vim.keymap.set(modes, '', '')
+EOF
+
+"----------------------------------------------------------------------------
+" Settings that should also work in VSCode
+"----------------------------------------------------------------------------
+
+" Highlight current line
+set cursorline
+
+" Highlight the 80-th column
+set colorcolumn=80
+
+" Case-insensitive search
+set ignorecase
+
+" Don't add double spaces when joining sentences
+set nojoinspaces
+
+" Add C++ template delimiters to matched pairs
+set matchpairs+=<:>
+
+" Highlight matching braces
+set showmatch
+
 if exists('g:vscode')
     finish
 endif
@@ -141,6 +187,9 @@ cmp.setup({
 EOF
 
 lua <<EOF
+vim.lsp.set_log_level 'DEBUG'
+require'vim.lsp.log'.set_format_func(vim.inspect)
+
 local set_mappings = function (client, bufnr)
   -- vim.api.nvim_buf_set_keymap(bufnr, 'n' , 'gd', '<cmd>lua vim.lsp.buf.definition()<cr>', { noremap=true })
   vim.api.nvim_buf_set_keymap(bufnr, 'n' , 'gd', '<cmd>lua require("telescope.builtin").lsp_definitions()<cr>', { noremap=true })
@@ -181,7 +230,7 @@ require'lspconfig'.clangd.setup{
   capabilities = {
     textDocument = {
       semanticHighLightingCapabilities = {
-        semanticHighLighting = true
+        semanticHighLighting = false
       }
     }
   },
@@ -351,17 +400,8 @@ set nrformats=alpha,hex
 " Disable folding
 set nofoldenable
 
-" Highlight current line
-set cursorline
-
-" Highlight the 80-th column
-set colorcolumn=80
-
 " Display line, column number in corner
 set ruler
-
-" Case-insensitive search
-set ignorecase
 
 " Enable relative line numbers
 set relativenumber
@@ -370,9 +410,6 @@ set numberwidth=5
 
 " Case-sensitive search if at least one Capital letter is used
 set smartcase
-
-" Highlight matching braces
-set showmatch
 
 " Disable bell
 set visualbell
@@ -397,12 +434,6 @@ set secure
 
 " Keep backups
 set backup
-
-" Don't add double spaces when joining sentences
-set nojoinspaces
-
-" Add C++ template delimiters to matched pairs
-set matchpairs+=<:>
 
 " Store backups in one place
 set backupdir=~/.local/share/nvim/backup

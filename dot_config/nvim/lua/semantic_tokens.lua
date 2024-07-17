@@ -108,14 +108,16 @@ function M.get_highlight_callback(bufnr)
       end
 
       -- print(token_kind)
-      vim.api.nvim_buf_add_highlight(
-        bufnr,
-        M.hl_namespace,
-        token_kind_to_highlight_group[token_kind],
-        line,
-        start,
-        start + length
-      )
+      if token_kind is not nil then
+        vim.api.nvim_buf_add_highlight(
+          bufnr,
+          M.hl_namespace,
+          token_kind_to_highlight_group[token_kind],
+          line,
+          start,
+          start + length
+        )
+      end
     end
   end
 end
