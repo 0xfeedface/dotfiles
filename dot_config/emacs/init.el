@@ -8,7 +8,7 @@
 ;; Disable splash screen
 (setq inhibit-startup-message t)
 
-;; Store lisp files and thems in subdirs
+;; Store lisp files and themes in subdirs
 (add-to-list 'load-path (expand-file-name "site-lisp" user-emacs-directory))
 (add-to-list 'load-path (expand-file-name "setup" user-emacs-directory))
 (add-to-list 'custom-theme-load-path (expand-file-name "themes" user-emacs-directory))
@@ -55,6 +55,7 @@
 (setq-default indent-tabs-mode nil)
 ;; Set up display-line-numbers-mode
 (setq-default display-line-numbers-width 4)
+(setq-default cursor-type 'bar)
 (setq display-line-numbers-type 'relative
       display-line-numbers-current-absolute t)
 (add-hook 'prog-mode-hook 'display-line-numbers-mode)
@@ -173,7 +174,6 @@
   :config
   (sp-local-pair 'c++-ts-mode "<" ">"))
 
-
 ;; Keep cursor away from edges when scrolling up/down
 (use-package smooth-scrolling
   :ensure t
@@ -219,10 +219,8 @@
 ;; Show num matches for Isearch
 (use-package isearch
   :ensure nil
-  :custom
-  (isearch-lazy-count t)
-  (isearch-wrap-pause 'no-ding)
-  (isearch-repeat-on-direction-change t)
+  :config
+  (setq isearch-lazy-count t)
   :bind (:map isearch-mode-map
               ("M-<up>" . isearch-ring-retreat)
               ("M-<down>" . isearch-ring-advance)))
@@ -369,7 +367,9 @@
                               ("M-e" . magit-section-backward-sibling)))
   :config
   (add-to-list 'project-switch-commands '(magit-project-status "Magit" ?m))
-  (magit-save-repository-buffers nil))
+  (magit-save-repository-buffers nil)
+  :custom
+  (magit-log-section-commit-count 20))
 
 ;; Yasnippet
 (use-package yasnippet
@@ -528,23 +528,11 @@
   :config
   (projectile-mode))
 
-(use-package autoinsert
-  :ensure nil
-  :hook
-  (find-file . auto-insert)
-  :config
-  (setq auto-insert-query nil
-        auto-insert-directory (expand-file-name "auto-insert" user-emacs-directory)
-        auto-insert-alist '((("\\.org\\'" . "Org-Mode file") . "template.org")))
-  (auto-insert-mode))
+(use-package burly
+  :ensure t)
 
-(use-package dired
-  :ensure nil
-  :config
-  (setf dired-kill-when-opening-new-dired-buffer t))
-  ;; :bind (:map dired-mode-map
-  ;;             ("RET" . dired-find-alternate-file)
-  ;;             ("^" . (lambda () (interactive) (find-alternate-file "..")))))
+(use-package default-text-scale
+  :ensure t)
 
 (require 'sane-defaults)
 (require 'setup-evil)
@@ -579,3 +567,4 @@
 
 (put 'scroll-left 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
+(server-start)

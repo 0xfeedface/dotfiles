@@ -13,6 +13,7 @@
         evil-want-Y-yank-to-eol t
         evil-want-fine-undo t
         evil-undo-system 'undo-redo
+        evil-emacs-state-cursor 'bar)
   :bind (:map evil-normal-state-map (("U" . 'evil-redo)
                                      ("gq" . 'eglot-format)
                                      ("gQ" . 'eglot-format-buffer)
@@ -31,6 +32,7 @@
   (evil-global-set-key 'normal "m" nil)
   (evil-global-set-key 'normal "e" nil)
   (evil-global-set-key 'normal "i" nil)
+  (evil-global-set-key 'visual "i" nil)
   (evil-global-set-key 'normal (kbd "C-r") nil)
   (evil-global-set-key 'normal (kbd "C-.") nil)
   (evil-global-set-key 'normal (kbd "M-.") nil)
@@ -43,6 +45,7 @@
   (evil-global-set-key 'normal "k" 'avy-goto-char-timer)
   (evil-global-set-key 'normal "h" 'evil-forward-word-end)
   (evil-global-set-key 'normal "H" 'evil-forward-WORD-end)
+  (evil-global-set-key 'visual "i" 'evil-forward-char)
   (evil-set-initial-state 'dired-mode 'emacs)
   (evil-select-search-module 'evil-search-module 'isearch)
   (evil-mode 1))
