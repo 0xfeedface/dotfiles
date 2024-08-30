@@ -47,9 +47,9 @@
         fixed-pitch-serif-font (format "%s Medium" fixed-pitch-serif-font)
 	font-height 140))
 (set-face-attribute 'default nil :font fixed-pitch-serif-font :height font-height)
-(set-face-attribute 'fixed-pitch nil :font fixed-pitch-font)
-(set-face-attribute 'variable-pitch nil :font fixed-pitch-font)
-(set-face-attribute 'fixed-pitch-serif nil :font fixed-pitch-serif-font)
+(set-face-attribute 'fixed-pitch nil :font fixed-pitch-font :height font-height)
+(set-face-attribute 'variable-pitch nil :font fixed-pitch-font :height font-height)
+(set-face-attribute 'fixed-pitch-serif nil :font fixed-pitch-serif-font :height font-height)
 
 ;; Use spaces instead of tabs for indentation
 (setq-default indent-tabs-mode nil)
@@ -128,6 +128,7 @@
   :hook
   (prog-mode . smartparens-mode)
   (emacs-lisp-mode . (lambda () (sp-local-pair 'emacs-lisp-mode "'" nil :actions nil)))
+  (rust-mode . (lambda () (sp-local-pair 'rust-mode "'" nil :actions nil)))
   :bind (:map smartparens-mode-map
               ;; Movement
               ("C-f" . sp-forward-symbol)

@@ -39,6 +39,10 @@ path=(~/.local/bin $path)
 path=(~/.cargo/bin $path)
 path=(~/.go/bin $path)
 
+{{ if (eq .chezmoi.os "darwin") }}
+path=($HOMEBREW_PREFIX/opt/llvm/bin $path)
+{{ end }}
+
 eval "$(dircolors ~/.dircolors)"
 
 alias ls='ls --color=auto'
@@ -115,6 +119,7 @@ RPROMPT='${vcs_info_msg_0_}'
 bindkey -e
 bindkey '^P' end-of-line
 bindkey '^E' up-line-or-history
+bindkey '^G' backward-kill-line
 WORDCHARS='*?.[]~&!#$%^(){}<>'
 
 # Vim keybindings for zle
@@ -130,3 +135,4 @@ WORDCHARS='*?.[]~&!#$%^(){}<>'
 ## [ -f ~/.local/share/zsh/vim-mode/zsh-vim-mode.plugin.zsh ] && source ~/.local/share/zsh/vim-mode/zsh-vim-mode.plugin.zsh
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+[ -f ~/.pyenv.zsh ] && source ~/.pyenv.zsh

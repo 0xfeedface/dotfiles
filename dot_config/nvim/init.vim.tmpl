@@ -1,25 +1,28 @@
 lua <<EOF
-local modes = { 'n', 'x', 'o' }
--- left
-vim.keymap.set(modes, 'm', 'h')
-vim.keymap.set(modes, 'M', 'H')
-vim.keymap.set(modes, 'h', 'e')
-vim.keymap.set(modes, 'H', 'E')
--- down
-vim.keymap.set(modes, 'n', 'j')
-vim.keymap.set(modes, 'N', 'J')
-vim.keymap.set(modes, 'k', 'n')
-vim.keymap.set(modes, 'K', 'N')
--- up
-vim.keymap.set(modes, 'e', 'k')
-vim.keymap.set(modes, 'E', 'K')
-vim.keymap.set(modes, 'l', 'i')
-vim.keymap.set(modes, 'L', 'I')
--- right
-vim.keymap.set(modes, 'i', 'l')
-vim.keymap.set(modes, 'I', 'L')
-vim.keymap.set(modes, '', '')
-vim.keymap.set(modes, '', '')
+function set_colemak_mapping()
+  local modes = { 'n', 'x', 'o' }
+  -- left
+  vim.keymap.set(modes, 'm', 'h')
+  vim.keymap.set(modes, 'M', 'H')
+  vim.keymap.set(modes, 'h', 'e')
+  vim.keymap.set(modes, 'H', 'E')
+  -- down
+  vim.keymap.set(modes, 'n', 'j')
+  vim.keymap.set(modes, 'N', 'J')
+  vim.keymap.set(modes, 'k', 'n')
+  vim.keymap.set(modes, 'K', 'N')
+  -- up
+  vim.keymap.set(modes, 'e', 'k')
+  vim.keymap.set(modes, 'E', 'K')
+  vim.keymap.set(modes, 'l', 'i')
+  vim.keymap.set(modes, 'L', 'I')
+  -- right
+  vim.keymap.set(modes, 'i', 'l')
+  vim.keymap.set(modes, 'I', 'L')
+  vim.keymap.set(modes, '', '')
+  vim.keymap.set(modes, '', '')
+end
+set_colemak_mapping()
 EOF
 
 "----------------------------------------------------------------------------
@@ -139,9 +142,7 @@ call plug#end()
 lua <<EOF
 require'nvim-treesitter.configs'.setup {
   ensure_installed = { 'c', 'cpp', 'python', 'vim', 'lua', 'comment' },
-  highlight = {
-    enable = true,
-  },
+  highlight = { enable = true, },
   incremental_selection = { enable = true },
   indent = { enable = true },
 }
@@ -187,8 +188,8 @@ cmp.setup({
 EOF
 
 lua <<EOF
-vim.lsp.set_log_level 'DEBUG'
-require'vim.lsp.log'.set_format_func(vim.inspect)
+-- vim.lsp.set_log_level 'DEBUG'
+-- require'vim.lsp.log'.set_format_func(vim.inspect)
 
 local set_mappings = function (client, bufnr)
   -- vim.api.nvim_buf_set_keymap(bufnr, 'n' , 'gd', '<cmd>lua vim.lsp.buf.definition()<cr>', { noremap=true })
@@ -306,20 +307,28 @@ require'nvim-treesitter.configs'.setup {
       enable = true,
       set_jumps = true, -- whether to set jumps in the jumplist
       goto_next_start = {
-        ['+m'] = '@function.outer',
-        ['++'] = '@class.outer',
+        [']d'] = '@function.outer',
+        [']c'] = '@class.outer',
       },
       goto_next_end = {
-        ['+M'] = '@function.outer',
-        ['+ü'] = '@class.outer',
+        [']D'] = '@function.outer',
+        [']C'] = '@class.outer',
       },
       goto_previous_start = {
-        ['üm'] = '@function.outer',
-        ['üü'] = '@class.outer',
+        ['[d'] = '@function.outer',
+        ['[c'] = '@class.outer',
       },
       goto_previous_end = {
-        ['üM'] = '@function.outer',
-        ['ü+'] = '@class.outer',
+        ['[D'] = '@function.outer',
+        ['[C'] = '@class.outer',
+      },
+    },
+    select = {
+      enable = true,
+      lookahead = true,
+      keymaps = {
+        ['af'] = '@function.outer',
+        ['if'] = '@function.inner',
       },
     },
   },
