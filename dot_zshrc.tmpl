@@ -10,7 +10,7 @@ export FZF_DEFAULT_OPTS='
 
 setopt histignorealldups incappendhistory sharehistory histreduceblanks histignorespace
 
-{{ if (eq .chezmoi.hostname "thinkpad") }}
+{{ if (eq .chezmoi.os "linux") }}
 export VAULT_ADDR='https://vault.linguee.internal'
 export ANSIBLE_BECOME_ASK_PASS=False
 export DEEPL_USER=nhzhssh
@@ -20,7 +20,7 @@ typeset -U fpath
 fpath=(~/.zfunc $fpath)
 
 setopt autocd
-cdpath=($HOME/deepl)
+cdpath=($HOME/deepl/repos)
 {{ end }}
 
 DIRSTACKSIZE=8
@@ -38,10 +38,12 @@ ldlibrarypath=($ldlibrarypath /usr/local/lib)
 path=(~/.local/bin $path)
 path=(~/.cargo/bin $path)
 path=(~/.go/bin $path)
+path=(~/.dotnet/tools $path)
+path=(/home/linuxbrew/.linuxbrew/bin $path)
+path=($(pyenv root)/shims $path)
 
-{{ if (eq .chezmoi.os "darwin") }}
-path=($HOMEBREW_PREFIX/opt/llvm/bin $path)
-{{ end }}
+export VCPKG_ROOT=~/other/vcpkg
+path=($VCPKG_ROOT $path)
 
 eval "$(dircolors ~/.dircolors)"
 
@@ -49,6 +51,8 @@ alias ls='ls --color=auto'
 alias grep='grep --color=auto'
 alias open='xdg-open > /dev/null 2>&1'
 {{ else if (eq .chezmoi.os "darwin") }}
+path=($HOMEBREW_PREFIX/opt/llvm/bin $path)
+
 chflags nohidden ~/Library/
 export CLICOLOR=1
 export LSCOLORS='exfxcxdxbxegedabagacad'
@@ -99,7 +103,23 @@ zstyle ':completion:*:warnings' format "%F{1} -- no matches found -- %F{14}"
 zstyle ':completion:*:descriptions' format "%F{2} -- %d -- %F{14}"
 zstyle ':completion:*:corrections' format "%F{2} -- %d -- %F{14}"
 
-{{ if (eq .chezmoi.hostname "thinkpad") }}
+{{ if (eq .chezmoi.os "linux") }}
+# zsh parameter completion for the dotnet CLI
+_dotnet_zsh_complete() {
+  local completions=("$(dotnet complete "$words")")
+
+  # If the completion list is empty, just continue with filename selection
+  if [ -z "$completions" ]
+  then
+    _arguments '*::arguments: _normal'
+    return
+  fi
+
+  # This is not a variable assignment, don't remove spaces!
+  _values = "${(ps:\n:)completions}"
+}
+compdef _dotnet_zsh_complete dotnet
+
 source <(kubectl completion zsh)
 {{ end }}
 
@@ -133,6 +153,12 @@ WORDCHARS='*?.[]~&!#$%^(){}<>'
 ## WORDCHARS='*?.[]~&!#$%^(){}<>'
 ## VIM_MODE_VICMD_KEY='^B'
 ## [ -f ~/.local/share/zsh/vim-mode/zsh-vim-mode.plugin.zsh ] && source ~/.local/share/zsh/vim-mode/zsh-vim-mode.plugin.zsh
+
+export PYENV_ROOT="$(pyenv root)"
+eval "$(pyenv init -)"
+
+# Fix Poetry
+export PYTHON_KEYRING_BACKEND=keyring.backends.fail.Keyring
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 [ -f ~/.pyenv.zsh ] && source ~/.pyenv.zsh
