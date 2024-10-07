@@ -30,8 +30,138 @@ end
 
 return {
   {
-    dir = '~/other/NeoSolarized',
+    'Tsuzat/NeoSolarized.nvim',
+    enabled = false,
+    cond = not vim.g.vscode,
+    lazy = false,
+    priority = 1000,
+    config = function()
+      require'NeoSolarized'.setup{
+        transparent = false,
+        enable_italics = false,
+        styles = {
+          -- Style to be applied to different syntax groups
+          comments = { italic = false },
+          keywords = { italic = false },
+          functions = { bold = false },
+          variables = {},
+          string = { italic = false },
+          underline = false, -- global underline
+          undercurl = false, -- global undercurl
+        },
+        on_highlights = function(highlights, colors)
+          highlights.Constant.fg = colors.violet
+          -- highlights.String
+          highlights.Character.link = 'Constant'
+          highlights.Number.link = 'Constant'
+          highlights.Boolean.link = 'Constant'
+          highlights.Float.link = 'Constant'
+          highlights.Identifier.fg = colors.aqua
+          highlights.Function.link = 'Identifier'
+          highlights.Statement.fg = colors.purple
+          highlights.Conditional.link = 'Statement'
+          highlights.Repeat.link = 'Statement'
+          highlights.Label.link = 'Statement'
+          highlights.Operator.link = 'Statement'
+          highlights.Keyword.link = 'Statement'
+          highlights.Exception.link = 'Statement'
+          highlights.PreProc.fg = colors.yellow
+          highlights.PreCondit.link = 'PreProc'
+          highlights.Include.link = 'PreProc'
+          highlights.Define.link = 'PreProc'
+          highlights.Macro.link = 'PreProc'
+          highlights.Type.fg = colors.blue
+          highlights.StorageClass.fg = colors.blue
+          highlights.Structure.fg = colors.blue
+          highlights.Typedef.fg = colors.blue
+          highlights.Special.fg = colors.orange
+          highlights.SpecialChar.link = 'Special'
+          highlights.Tag.link = 'Special'
+          highlights.Delimiter.link = 'Operator'
+          highlights.SpecialComment.link = 'Special'
+          highlights.Debug.link = 'Special'
+          highlights.Whitespace.fg = colors.fg0
+          -- highlights.Underlined = { underline = true }
+          -- highlights.Bold = { bold = true }
+          -- highlights.Italic = { italic = true }
+          -- ('Ignore', below, may be invisible...)
+          -- Ignore
+          -- highlights.Error
+          -- highlights.Todo
+          -- highlights.qfLineNr
+          -- highlights.qfFileName
+          -- Diagnostic
+          -- RedSign
+          -- highlights.YellowSign
+          -- highlights.GreenSign
+          -- highlights.BlueSign
+          -- highlights.VirtualTextWarning
+          highlights.VirtualTextError.italic = true
+          -- highlights.VirtualTextInfo
+          -- highlights.VirtualTextHint
+          -- highlights.ErrorFloat
+          -- highlights.WarningFloat
+          -- highlights.InfoFloat
+          -- highlights.HintFloat
+          highlights.TSAnnotation = nil
+          highlights.TSAttribute = nil
+          highlights.TSBoolean = nil
+          highlights.TSCharacter = nil
+          highlights.TSComment = nil
+          highlights.TSConditional = nil
+          highlights.TSConstBuiltin = { fg = colors.purple }
+          highlights['@constant.builtin'] = { link = 'Operator' }
+          highlights['@keyword.import'] = { link = 'PreProc' }
+          highlights.TSConstMacro = nil
+          highlights.TSConstant = nil
+          highlights.TSConstructor = nil
+          highlights.TSException = nil
+          highlights.TSField = nil
+          highlights.TSFloat = nil
+          highlights.TSFuncBuiltin = nil
+          highlights.TSFuncMacro = nil
+          highlights.TSFunction = nil
+          highlights.TSInclude = nil
+          highlights.TSKeyword = nil
+          highlights.TSKeywordFunction = nil
+          highlights.TSKeywordOperator = nil
+          highlights.TSLabel = nil
+          highlights.TSMethod = nil
+          highlights.TSNamespace = nil
+          highlights.TSNone = nil
+          highlights.TSNumber = nil
+          highlights.TSOperator = nil
+          highlights.TSParameter = nil
+          highlights.TSParameterReference = nil
+          highlights.TSProperty = { link = 'Normal' }
+          highlights.TSPunctBracket = nil
+          highlights.TSPunctDelimiter = { link = 'Operator' }
+          highlights.TSPunctSpecial = nil
+          highlights.TSRepeat = nil
+          highlights.TSStorageClass = nil
+          highlights.TSString = nil
+          highlights.TSStringEscape = nil
+          highlights.TSStringRegex = nil
+          highlights.TSSymbol = nil
+          highlights.TSTag = nil
+          highlights.TSTagDelimiter = nil
+          highlights.TSText = nil
+          highlights.TSStrike = nil
+          highlights.TSMath = nil
+          highlights.TSType = nil
+          highlights.TSTypeBuiltin = nil
+          highlights.TSURI = nil
+          highlights.TSVariable = nil
+          highlights.TSVariableBuiltin = nil
+        end
+      }
+      vim.cmd[[colorscheme NeoSolarized]]
+    end
+  },
+  {
+    dir = (is_mac() and '~/Code/' or '~/other/') .. 'NeoSolarized',
     enabled = true,
+    cond = not vim.g.vscode,
     lazy = false,
     priority = 1000,
     init = function()
@@ -41,13 +171,12 @@ return {
       vim.g.neosolarized_italic = 1
     end,
     config = function()
-      vim.cmd([[
-        colorscheme NeoSolarized
-      ]])
+      vim.cmd[[colorscheme NeoSolarized]]
     end,
   },
   {
     'morhetz/gruvbox',
+    cond = not vim.g.vscode,
     enabled = false,
     lazy = false,
     priority = 1000,
@@ -57,13 +186,12 @@ return {
       vim.g.gruvbox_bold = 0
     end,
     config = function()
-      vim.cmd([[
-        colorscheme gruvbox
-      ]])
+      vim.cmd[[colorscheme gruvbox]]
     end
   },
   {
     'nvim-treesitter/nvim-treesitter',
+    cond = not vim.g.vscode,
     build = ':TSUpdate',
     config = function()
       local configs = require('nvim-treesitter.configs')
@@ -115,10 +243,17 @@ return {
       }
     end,
   },
-  { 'nvim-treesitter/playground' },
-  { 'nvim-treesitter/nvim-treesitter-textobjects' },
+  {
+    'nvim-treesitter/playground',
+    cond = not vim.g.vscode
+  },
+  {
+    'nvim-treesitter/nvim-treesitter-textobjects',
+    cond = not vim.g.vscode
+  },
   {
     'nvim-telescope/telescope.nvim',
+    cond = not vim.g.vscode,
     tag = '0.1.8',
     dependencies = { 'nvim-lua/plenary.nvim' },
     config = function()
@@ -136,18 +271,22 @@ return {
           }
         }
       })
-      require('telescope').load_extension('fzy_native')
+      require'telescope'.load_extension('fzy_native')
       -- Mappings
-      local builtin = require('telescope.builtin')
+      local builtin = require'telescope.builtin'
       vim.keymap.set('n', '<leader>tf', builtin.find_files, { noremap = true, silent = true })
       vim.keymap.set('n', '<leader>tg', builtin.live_grep, { noremap = true, silent = true })
       vim.keymap.set('n', '<leader>tb', builtin.buffers, { noremap = true, silent = true })
       vim.keymap.set('n', '<leader>th', builtin.help_tags, { noremap = true, silent = true })
     end,
   },
-  { 'nvim-telescope/telescope-fzy-native.nvim' },
+  {
+    'nvim-telescope/telescope-fzy-native.nvim',
+    cond = not vim.g.vscode
+  },
   {
     'neovim/nvim-lspconfig',
+    cond = not vim.g.vscode,
     config = function()
       local lspconfig = require'lspconfig'
       local util = lspconfig.util
@@ -213,9 +352,13 @@ return {
       -- extended = true
     }
   },
-  { 'hrsh7th/cmp-nvim-lsp' },
+  {
+    'hrsh7th/cmp-nvim-lsp',
+    cond = not vim.g.vscode
+  },
   {
     'hrsh7th/nvim-cmp',
+    cond = not vim.g.vscode,
     config = function()
       local cmp = require'cmp'
       cmp.setup({
@@ -248,7 +391,6 @@ return {
       }
     end
   },
-
   {
     'bkad/CamelCaseMotion',
     config = function()
@@ -261,22 +403,33 @@ return {
       vim.g.tmpl_search_paths = { '~/.local/share/nvim/templates' }
     end
   },
-  { 'ziglang/zig.vim' },
-
+  {
+    'ziglang/zig.vim',
+    cond = not vim.g.vscode
+  },
   {
     'vim-airline/vim-airline',
+    cond = not vim.g.vscode,
     dependencies = { 'vim-airline/vim-airline-themes' },
     init = function()
       vim.g.airline_powerline_fonts = 1
       vim.g['airline#extensions#whitespace#mixed_indent_algo'] = 1
     end
   },
-
   { 'junegunn/vim-easy-align' },
-
   { 'tpope/vim-endwise' },
   { 'tpope/vim-eunuch' },
   { 'tpope/vim-fugitive' },
   { 'tpope/vim-scriptease' },
   { 'tpope/vim-surround' },
+  {
+    'glench/vim-jinja2-syntax',
+    enabled = not is_mac(),
+    cond = not vim.g.vscode,
+  },
+  {
+    'aklt/plantuml-syntax',
+    enabled = not is_mac(),
+    cond = not vim.g.vscode,
+  },
 }
