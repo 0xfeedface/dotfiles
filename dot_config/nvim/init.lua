@@ -118,7 +118,3 @@ vim.api.nvim_create_autocmd('InsertLeave', {
   pattern = '',
   command = 'set relativenumber'
 })
-vim.api.nvim_create_autocmd('BufWritePost', {
-  pattern = vim.fn.expand('%'),
-  command = 'source ' .. vim.fn.expand('%')
-})
