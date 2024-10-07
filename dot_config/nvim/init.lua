@@ -1,3 +1,12 @@
+local is_mac_result = nil
+function is_mac ()
+  if is_mac_result == nil then
+    local macbook_hostname = 'macbook-pro'
+    is_mac_result = vim.fn.hostname():sub(1, #macbook_hostname) == macbook_hostname
+  end
+  return is_mac_result
+end
+
 require('config.lazy')
 require('config.mappings')
 require('config.file_types')
@@ -22,7 +31,7 @@ vim.o.relativenumber = true
 vim.o.number = true
 vim.o.numberwidth = 5
 
-vim.g.python3_host_prog = '/usr/bin/python'
+vim.g.python3_host_prog = is_mac() and '/opt/homebrew/bin/python3' or '/usr/bin/python'
 vim.g.loaded_python_provider = false
 vim.g.loaded_ruby_provider = false
 vim.g.loaded_perl_provider = false
