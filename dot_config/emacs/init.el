@@ -363,9 +363,6 @@
   :ensure t
   :demand t
   :after project
-  :bind (:map magit-mode-map (("e" . magit-section-backward)
-                              ("p" . magit-ediff-dwim)
-                              ("M-e" . magit-section-backward-sibling)))
   :config
   (add-to-list 'project-switch-commands '(magit-project-status "Magit" ?m))
   (magit-save-repository-buffers nil)
@@ -537,14 +534,6 @@
 
 (require 'sane-defaults)
 (require 'setup-evil)
-
-;; Swap -p and -e bindings for Colemak
-(define-key key-translation-map (kbd "C-e") (kbd "C-p"))
-(define-key key-translation-map (kbd "C-p") (kbd "C-e"))
-(define-key key-translation-map (kbd "M-e") (kbd "M-p"))
-(define-key key-translation-map (kbd "M-p") (kbd "M-e"))
-(define-key key-translation-map (kbd "C-M-e") (kbd "C-M-p"))
-(define-key key-translation-map (kbd "C-M-p") (kbd "C-M-e"))
 
 (keymap-global-set "M-F" 'forward-to-word)
 (keymap-global-set "M-B" 'backward-to-word)
