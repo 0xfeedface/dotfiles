@@ -304,7 +304,11 @@ return {
           debounce_text_changes = 500
         },
         root_dir = util.root_pattern('compile_commands.json'),
+{{- if eq .chezmoi.os "linux" }}
+        cmd = { '/usr/lib/llvm19/bin/clangd', '--cross-file-rename', },
+{{- else }}
         cmd = { 'clangd', '--cross-file-rename', },
+{{ end }}
         capabilities = {
           textDocument = {
             semanticHighLightingCapabilities = {
