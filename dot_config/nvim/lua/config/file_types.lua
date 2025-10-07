@@ -10,7 +10,7 @@ local autocmd = vim.api.nvim_create_autocmd
 
 augroup('smallindent', { clear = true })
 autocmd('FileType', {
-  pattern = { 'lua', 'vim', 'template', 'html', 'css', 'json', 'sh', 'yaml', 'sql', 'xml', 'tex' },
+  pattern = { 'lua', 'vim', 'template', 'html', 'css', 'json', 'sh', 'yaml', 'sql', 'xml', 'tex', 'cmake' },
   callback = function()
     vim.opt_local.tabstop = 2
     vim.opt_local.shiftwidth = 2
