@@ -351,7 +351,9 @@
   :config
   (add-hook 'eglot-managed-mode-hook (lambda () (eglot-inlay-hints-mode -1)))
   (add-hook 'c++-mode-hook 'eglot-ensure)
+  ;; (add-hook 'c++-mode-hook 'eglot-semtok-font-lock-init)
   (add-hook 'c++-ts-mode-hook 'eglot-ensure)
+  ;; (add-hook 'c++-ts-mode-hook 'eglot-semtok-font-lock-init)
   (add-hook 'python-mode-hook 'eglot-ensure)
   (add-hook 'python-ts-mode-hook 'eglot-ensure))
 
@@ -531,6 +533,11 @@
 
 (use-package default-text-scale
   :ensure t)
+
+;; TODO: port
+;; (use-package eglot-semtok
+;;   :load-path "/home/norman/.local/share/emacs/eglot-supplements/"
+;;   :hook (eglot-connect . eglot-semtok-on-connected))
 
 (require 'sane-defaults)
 (require 'setup-evil)
