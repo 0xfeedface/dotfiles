@@ -258,11 +258,20 @@ return {
     dependencies = { 'nvim-lua/plenary.nvim' },
     config = function()
       -- Setup
-      local config = require('telescope')
+      local config = require'telescope'
       config.setup({
         defaults = {
-          layout_strategy = 'vertical'
-          -- preview = false
+          layout_strategy = 'vertical',
+          mappings = {
+            i = {
+              ["<C-e>"] = "move_selection_previous",
+            },
+            n = {
+              ["n"] = "move_selection_next",
+              ["e"] = "move_selection_previous",
+            },
+          },
+          -- preview = false,
         },
         extensions = {
           fzy_native = {
