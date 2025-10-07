@@ -10,7 +10,7 @@ local autocmd = vim.api.nvim_create_autocmd
 
 augroup('smallindent', { clear = true })
 autocmd('FileType', {
-  pattern = { 'lua', 'vim', 'template', 'html', 'css', 'json', 'sh', 'yaml', 'sql', 'xml' },
+  pattern = { 'lua', 'vim', 'template', 'html', 'css', 'json', 'sh', 'yaml', 'sql', 'xml', 'tex' },
   callback = function()
     vim.opt_local.tabstop = 2
     vim.opt_local.shiftwidth = 2
@@ -27,6 +27,15 @@ autocmd('FileType', {
     vim.opt_local.iskeyword:append { '-' }
   end,
   group = 'dashnosep'
+})
+
+augroup('wrapped', { clear = true })
+autocmd('FileType', {
+  pattern = { 'tex' },
+  callback = function()
+    vim.opt_local.wrap = true
+  end,
+  group = 'wrapped'
 })
 
 augroup('c', { clear = true })
