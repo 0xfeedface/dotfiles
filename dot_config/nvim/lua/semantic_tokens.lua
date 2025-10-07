@@ -107,8 +107,7 @@ function M.get_highlight_callback(bufnr)
         start = delta_start
       end
 
-      -- print(token_kind)
-      if token_kind is not nil then
+      if token_kind ~= nil then
         vim.api.nvim_buf_add_highlight(
           bufnr,
           M.hl_namespace,
