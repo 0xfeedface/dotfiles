@@ -412,7 +412,9 @@
 (use-package treesit
   :ensure nil
   :config
-  (setq treesit-extra-load-path '("/Users/norman/Code/tree-sitter-module/dist"))
+  ;; TODO: port
+  (setq treesit-extra-load-path '("/home/norman/other/tree-sitter-module/dist"))
+  ;; (setq treesit-extra-load-path '("/Users/norman/Code/tree-sitter-module/dist"))
   (setq treesit-font-lock-level 4))
 
 ;; C/C++
