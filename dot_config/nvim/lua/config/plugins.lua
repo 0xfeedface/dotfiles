@@ -428,7 +428,12 @@ return {
   { 'junegunn/vim-easy-align' },
   { 'tpope/vim-endwise' },
   { 'tpope/vim-eunuch' },
-  { 'tpope/vim-fugitive' },
+  {
+    'tpope/vim-fugitive',
+    config = function()
+      vim.keymap.set('n', 'gb', '<cmd>:Git blame<cr>', { noremap = true, silent = true })
+    end
+  },
   { 'tpope/vim-scriptease' },
   { 'tpope/vim-surround' },
   {
