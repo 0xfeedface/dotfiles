@@ -18,6 +18,7 @@
  '(org-block ((t (:inherit (fixed-pitch-serif default)))))
  '(org-verbatim ((t (:inherit 'fixed-pitch-serif :slant oblique))))
  '(org-code ((t (:inherit 'org-verbatim))))
+ '(outline-2 ((t (:inherit 'font-lock-escape-face))))
  '(outline-4 ((t (:inherit 'font-lock-string-face))))
  )
 (provide-theme 'permutation)

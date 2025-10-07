@@ -369,7 +369,7 @@
   (add-to-list 'project-switch-commands '(magit-project-status "Magit" ?m))
   (magit-save-repository-buffers nil)
   :custom
-  (magit-log-section-commit-count 20))
+  (magit-log-section-commit-count 30))
 
 ;; Yasnippet
 (use-package yasnippet
@@ -544,7 +544,7 @@
 
 (keymap-global-set "M-F" 'forward-to-word)
 (keymap-global-set "M-B" 'backward-to-word)
-(keymap-global-set "C-x K" 'kill-this-buffer)
+(keymap-global-set "C-x K" 'kill-current-buffer)
 ;; (keymap-global-set "M-<delete>" 'kill-word)
 ;; (keymap-global-set "C-<delete>" 'sp-kill-symbol)
 (keymap-global-set "M-z" 'zap-up-to-char)
@@ -556,6 +556,10 @@
 (keymap-global-set "M-p" 'backward-to-indentation)
 (keymap-global-set "C-v" 'scroll-up-command)
 (keymap-global-set "C-S-v" 'scroll-down-command)
+(keymap-global-set "C-S-h" 'windmove-swap-states-left)
+(keymap-global-set "C-S-l" 'windmove-swap-states-right)
+(keymap-global-set "C-M-h" 'windmove-left)
+(keymap-global-set "C-M-l" 'windmove-right)
 ;; (keymap-global-set "C-M->" 'end-of-)
 (global-set-key  [remap list-buffers] 'ibuffer)
 
