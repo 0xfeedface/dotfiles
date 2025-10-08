@@ -1,14 +1,19 @@
-font_family         Iosevka Custom Fixed Slab Medium
-bold_font           Iosevka Custom Fixed Slab Semibold
-italic_font         Iosevka Custom Fixed Slab Medium Italic
-bold_italic_font    Iosevka Custom Fixed Slab Semibold Italic
-
 {{- if (eq .chezmoi.os "darwin") }}
+font_family         Iosevka Custom Fixed Slab Medium
+bold_font           Iosevka Custom Fixed Slab Medium Semibold
+italic_font         Iosevka Custom Fixed Slab Medium Italic
+bold_italic_font    Iosevka Custom Fixed Slab Medium Semibold Italic
+
 font_size 18.0
 
 initial_window_width  100c
 initial_window_height 42c
 {{- else if (eq .chezmoi.os "linux") }}
+font_family         Iosevka Custom Fixed Slab
+bold_font           Iosevka Custom Fixed Slab Semibold
+italic_font         Iosevka Custom Fixed Slab Italic
+bold_italic_font    Iosevka Custom Fixed Slab Semibold Italic
+
 font_size 14
 initial_window_width  138c
 initial_window_height 46c
