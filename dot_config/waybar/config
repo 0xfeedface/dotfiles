@@ -1,0 +1,39 @@
+{
+    "layer": "top",
+    "modules-left": ["sway/workspaces", "sway/mode"],
+    // "modules-center": ["sway/window"],
+    "modules-right": ["memory", "cpu", "battery", "clock"],
+    "sway/window": {
+        "max-length": 50
+    },
+    "cpu": {
+        "interval": 3,
+        "format": "{} % ",
+        "max-length": 10
+    },
+    "memory": {
+        "interval": 3,
+        "format": "{} % ",
+        "max-length": 10
+    },
+    "network": {
+        "interval": 10,
+        "format": "{ifname}",
+        "format-wifi": "{ipaddr} ({signalStrength}%) ",
+        "format-ethernet": "{ipaddr} ",
+        // An empty format will hide the module.
+        "format-disconnected": "no link",
+        "max-length": 50,
+        "family": "ipv4"
+    },
+    "battery": {
+        "format": "{capacity}% {icon}",
+        "format-icons": ["", "", "", "", ""]
+    },
+    "clock": {
+        "interval": 1,
+        // "format": "{:%a, %d. %b  %H:%M}",
+        "format": "{:%Y-%m-%d %H:%M}",
+        "format-alt": "{:%H:%M}"
+    }
+}

@@ -1,0 +1,33 @@
+[colors.bright]
+black = "0x00222e"
+blue = "0x8d9fa0"
+cyan = "0x98a6a6"
+green = "0x5d737b"
+magenta = "0x7176ca"
+red = "0xd1511b"
+white = "0xfffce9"
+yellow = "0x6a8088"
+
+[colors.normal]
+black = "0x01313d"
+blue = "0x2f91d7"
+cyan = "0x32a79d"
+green = "0x8a9f00"
+magenta = "0xd93c87"
+red = "0xe33934"
+white = "0xf4edda"
+yellow = "0xbb8e07"
+
+[colors.primary]
+background = "0x002732"
+foreground = "0x88999b"
+
+[font]
+size = 14
+
+[font.normal]
+family = "Iosevka Custom Fixed Slab"
+style = "Medium"
+
+[scrolling]
+multiplier = 25

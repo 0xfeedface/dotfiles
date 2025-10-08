@@ -1,0 +1,273 @@
+### Variables
+#
+# Logo key. Use Mod1 for Alt.
+set $mod Mod4
+# Home row direction keys, like vim
+set $left h
+set $down j
+set $up k
+set $right l
+# Your preferred terminal emulator
+# set $term kitty
+set $term alacritty
+# Your preferred application launcher
+# set $menu dmenu_run
+# set $menu termite --name=launcher -e "bash -c 'compgen -c | sort -u | fzf --no-extended --print-query | tail -n1 | xargs -r swaymsg -t command exec'"
+set $menu wofi --show drun
+for_window [app_id="^launcher$"] floating enable, border none
+# Solarized colors
+set $S_base_3   #00202a
+# set $S_base_3   #002b36
+set $S_base_2   #073642
+set $S_base_1   #586e75
+set $S_base_0   #657b83
+set $S_base0    #839496
+set $S_base1    #93a1a1
+set $S_base2    #eee8d5
+set $S_base3    #fdf6e3
+set $S_yellow   #b58900
+set $S_orange   #cb4b16
+set $S_red      #dc322f
+set $S_magenta  #d33682
+set $S_violet   #6c71c4
+set $S_blue     #268bd2
+set $S_cyan     #2aa198
+set $S_green    #859900
+
+smart_gaps off
+gaps outer 0
+gaps inner 4
+
+### Color configuration
+#
+# Color class           border      background  text        indicator   child border
+client.focused          $S_yellow   $S_yellow   $S_base_3   $S_magenta  $S_yellow
+# client.focused          $S_base1    $S_base1    $S_base_3   $S_magenta  $S_base1
+client.focused_inactive $S_base_1   $S_base_1  $S_base_3  $S_base_1     $S_base_1
+client.unfocused        $S_base_2   $S_base_2  $S_base_1  $S_base_2     $S_base_2
+# client.background       $S_base_2
+
+font Iosevka 11
+
+include output.conf
+
+### Output configuration
+#
+# Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
+# output * bg /usr/local/share/backgrounds/sway/Sway_Wallpaper_Blue_2048x1536.png fill
+
+# output * bg ~/Pictures/El_Capitan.jpg fill
+# output * bg $S_blue solid_color
+#
+# Example configuration:
+#
+#   output HDMI-A-1 resolution 1920x1080 position 1920,0
+#
+# You can get the names of your outputs by running: swaymsg -t get_outputs
+
+### Idle configuration
+#
+# exec /usr/bin/swayidle \
+#     timeout 10 'swaylock -c 000000e0' \
+#     timeout 20 'swaymsg "output * dpms off"' \
+#         resume 'swaymsg "output * dpms on"' \
+#     before-sleep 'swaylock -c 000000e0'
+
+exec swayidle -w \
+         timeout 600 'swaylock -f -c 000000' \
+         timeout 900 'swaymsg "output * power off"' resume 'swaymsg "output * power on"' \
+         before-sleep 'swaylock -f -c 000000'
+
+### Input configuration
+#
+# Example configuration:
+#
+#   input "2:14:SynPS/2_Synaptics_TouchPad" {
+#       dwt enabled
+#       tap enabled
+#       natural_scroll enabled
+#       middle_emulation enabled
+#   }
+#
+# You can get the names of your inputs by running: swaymsg -t get_inputs
+# Read `man 5 sway-input` for more information about this section.
+#
+include input.conf
+
+### Key bindings
+#
+# Basics:
+#
+    # start a terminal
+    bindsym $mod+Return exec $term
+
+    # kill focused window
+    bindsym $mod+Shift+q kill
+
+    # start your launcher
+    # bindsym $mod+d exec $menu
+    bindsym $mod+space exec $menu
+
+    # Drag floating windows by holding down $mod and left mouse button.
+    # Resize them with right mouse button + $mod.
+    # Despite the name, also works for non-floating windows.
+    # Change normal to inverse to use left mouse button for resizing and right
+    # mouse button for dragging.
+    floating_modifier $mod normal
+
+    # reload the configuration file
+    bindsym $mod+Shift+c reload
+
+    # exit sway (logs you out of your wayland session)
+    bindsym $mod+Shift+e exit
+#
+# Moving around:
+#
+    # Move your focus around
+    bindsym $mod+$left focus left
+    bindsym $mod+$down focus down
+    bindsym $mod+$up focus up
+    bindsym $mod+$right focus right
+    # or use $mod+[up|down|left|right]
+    bindsym $mod+Left focus left
+    bindsym $mod+Down focus down
+    bindsym $mod+Up focus up
+    bindsym $mod+Right focus right
+
+    # _move_ the focused window with the same, but add Shift
+    bindsym $mod+Shift+$left move left
+    bindsym $mod+Shift+$down move down
+    bindsym $mod+Shift+$up move up
+    bindsym $mod+Shift+$right move right
+    # ditto, with arrow keys
+    bindsym $mod+Shift+Left move left
+    bindsym $mod+Shift+Down move down
+    bindsym $mod+Shift+Up move up
+    bindsym $mod+Shift+Right move right
+#
+# Workspaces:
+#
+    # switch to workspace
+    bindsym $mod+1 workspace 1
+    bindsym $mod+2 workspace 2
+    bindsym $mod+3 workspace 3
+    bindsym $mod+4 workspace 4
+    bindsym $mod+5 workspace 5
+    bindsym $mod+6 workspace 6
+    bindsym $mod+7 workspace 7
+    bindsym $mod+8 workspace 8
+    bindsym $mod+9 workspace 9
+    bindsym $mod+0 workspace 10
+    # move focused container to workspace
+    bindsym $mod+Shift+1 move container to workspace 1
+    bindsym $mod+Shift+2 move container to workspace 2
+    bindsym $mod+Shift+3 move container to workspace 3
+    bindsym $mod+Shift+4 move container to workspace 4
+    bindsym $mod+Shift+5 move container to workspace 5
+    bindsym $mod+Shift+6 move container to workspace 6
+    bindsym $mod+Shift+7 move container to workspace 7
+    bindsym $mod+Shift+8 move container to workspace 8
+    bindsym $mod+Shift+9 move container to workspace 9
+    bindsym $mod+Shift+0 move container to workspace 10
+    # Note: workspaces can have any name you want, not just numbers.
+    # We just use 1-10 as the default.
+#
+# Layout stuff:
+#
+    # You can "split" the current object of your focus with
+    # $mod+b or $mod+v, for horizontal and vertical splits
+    # respectively.
+    bindsym $mod+b splith
+    bindsym $mod+v splitv
+
+    # Switch the current container between different layout styles
+    bindsym $mod+s layout stacking
+    bindsym $mod+w layout tabbed
+    bindsym $mod+e layout toggle split
+
+    # Make the current focus fullscreen
+    bindsym $mod+f fullscreen
+
+    # Toggle the current focus between tiling and floating mode
+    bindsym $mod+Shift+space floating toggle
+
+    # Swap focus between the tiling area and the floating area
+    # bindsym $mod+space focus mode_toggle
+
+    # move focus to the parent container
+    bindsym $mod+a focus parent
+
+    bindsym $mod+c focus child
+
+    focus_follows_mouse no
+#
+# Scratchpad:
+#
+    # Sway has a "scratchpad", which is a bag of holding for windows.
+    # You can send windows there and get them back later.
+
+    # Move the currently focused window to the scratchpad
+    bindsym $mod+Shift+minus move scratchpad
+
+    # Show the next scratchpad window or hide the focused scratchpad window.
+    # If there are multiple scratchpad windows, this command cycles through them.
+    bindsym $mod+minus scratchpad show
+#
+# Resizing containers:
+#
+mode "resize" {
+    # left will shrink the containers width
+    # right will grow the containers width
+    # up will shrink the containers height
+    # down will grow the containers height
+    bindsym $left resize shrink width 10 px or 10 ppt
+    bindsym $down resize grow height 10 px or 10 ppt
+    bindsym $up resize shrink height 10 px or 10 ppt
+    bindsym $right resize grow width 10 px or 10 ppt
+
+    # ditto, with arrow keys
+    bindsym Left resize shrink width 10 px or 10 ppt
+    bindsym Down resize grow height 10 px or 10 ppt
+    bindsym Up resize shrink height 10 px or 10 ppt
+    bindsym Right resize grow width 10 px or 10 ppt
+
+    # return to default mode
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+bindsym $mod+r mode "resize"
+
+#
+# Status Bar:
+#
+# Read `man 5 sway-bar` for more information about this section.
+bar {
+    swaybar_command waybar
+}
+
+#
+# Media keys:
+#
+include bindings.conf
+
+#
+# Float layouting
+#
+for_window [app_id="google-chrome"] floating enable, resize set 1820 1368, move position center
+for_window [app_id="Slack"] floating enable, resize set 1478 1378, move position center
+for_window [app_id="gnome-calculator"] floating enable
+# for_window [app_id="jetbrains-rider"] floating enable, resize set 2510 1370, move position center
+# for_window [app_id="code"] floating enable, resize set 2510 1370, move position center
+for_window [app_id="org.pulseaudio.pavucontrol"] floating enable, resize set 600 660, move position 1952 770
+# for_window [instance="zoom"] floating enable, resize set 448 500, move position 16 42
+# for_window [title="Zoom Workplace - Licensed account"] floating enable, resize set 448 500, move position 16 42
+for_window [app_id="Zoom Workplace"] floating enable
+for_window [instance="zoom"] floating enable, move position 16 42
+for_window [title="Zoom Workplace - Licensed account"] floating enable, move position 16 42
+for_window [instance="zoom" title="Settings"] floating enable, resize set 960 1000, move position center
+for_window [app_id="nm-connection-editor"] floating enable, move position center
+
+default_border pixel 2
+# hide_edge_borders both
+
+include /etc/sway/config.d/*

@@ -1,0 +1,130 @@
+@define-color S_base_3  #002b36;
+@define-color S_base_2  #073642;
+@define-color S_base_1  #586e75;
+@define-color S_base_0  #657b83;
+@define-color S_base0   #839496;
+@define-color S_base1   #93a1a1;
+@define-color S_base2   #eee8d5;
+@define-color S_base3   #fdf6e3;
+@define-color S_yellow  #b58900;
+@define-color S_orange  #cb4b16;
+@define-color S_red     #dc322f;
+@define-color S_magenta #d33682;
+@define-color S_violet  #6c71c4;
+@define-color S_blue    #268bd2;
+@define-color S_cyan    #2aa198;
+@define-color S_green   #859900;
+
+* {
+    border: none;
+    font-family: Iosevka Fixed Medium, Roboto, Helvetica, Arial, sans-serif;
+    font-size: 11pt;
+    /* font-size: 1.04em; */
+    /* min-height: 0; */
+    min-height: 22px;
+}
+
+window#waybar {
+    background: @S_base_3;
+    border-bottom: 3px solid @S_base_2;
+    color: @S_base3;
+}
+
+#workspaces button {
+    border-radius: 0;
+    padding: 0 5px;
+    background: transparent;
+    color: @S_base3;
+    border-bottom: 3px solid transparent;
+}
+
+#workspaces button.focused {
+    background: @S_base_1;
+    border-bottom: 3px solid @S_base_0;
+}
+
+#mode {
+    background: #64727D;
+    border-bottom: 3px solid white;
+}
+
+#clock, #battery, #cpu, #memory, #network, #pulseaudio, #custom-spotify, #tray, #mode {
+    padding: 0 10px;
+    margin: 0 5px;
+    opacity: 0.8;
+}
+
+#clock, #battery, #cpu, #memory, #network, #pulseaudio, #custom-spotify {
+    border-radius: 0;
+}
+
+#clock {
+    background-color: @S_base0;
+    color: @S_base_3;
+}
+
+#battery {
+    background-color: @S_violet;
+    color: @S_base3;
+}
+
+#battery.charging {
+    color: white;
+    background-color: @S_orange;
+}
+
+@keyframes blink {
+    to {
+        background-color: #ffffff;
+        color: black;
+    }
+}
+
+#battery.warning:not(.charging) {
+    background: #f53c3c;
+    color: white;
+    animation-name: blink;
+    animation-duration: 0.5s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+#cpu {
+    background: @S_green;
+    color: @S_base3;
+}
+
+#memory {
+    background: @S_magenta;
+    color: @S_base3;
+}
+
+#network {
+    background: @S_blue;
+    color: @S_base3;
+}
+
+#network.disconnected {
+    background: @S_orange;
+    color: @S_base3;
+}
+
+#pulseaudio {
+    background: #f1c40f;
+    color: black;
+}
+
+#pulseaudio.muted {
+    background: #90b1b1;
+    color: #2a5c45;
+}
+
+#custom-spotify {
+    background: #66cc99;
+    color: #2a5c45;
+}
+
+#tray {
+    background-color: #2980b9;
+}
