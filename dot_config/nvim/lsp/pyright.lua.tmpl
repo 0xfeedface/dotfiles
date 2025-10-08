@@ -1,0 +1,9 @@
+-- vim: filetype=lua
+return {
+  cmd = { 'pyright-langserver', '--stdio' },
+  root_markers = { '.' },
+  filetypes = { 'python' },
+  python = {
+    pythonPath = '/usr/bin/python'
+  },
+}

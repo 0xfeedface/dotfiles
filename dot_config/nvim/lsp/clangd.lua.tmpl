@@ -1,0 +1,45 @@
+-- vim: filetype=lua
+return {
+{{- if eq .chezmoi.os "linux" }}
+  cmd = { '/usr/lib/llvm19/bin/clangd' },
+{{- else }}
+  cmd = { 'clangd' },
+{{ end }}
+  filetypes = { 'cpp' },
+  flags = {
+    debounce_text_changes = 500
+  },
+  capabilities = {
+    textDocument = {
+      semanticHighLightingCapabilities = {
+        semanticHighLighting = false
+      }
+    }
+  },
+}
+
+--   {
+--     'neovim/nvim-lspconfig',
+--     config = function()
+--       local util = 'lspconfig.util'
+--       vim.lsp.config.clangd = {
+--         root_dir = util.root_pattern('compile_commands.json'),
+--         on_attach = function (client, bufnr)
+--           -- Set clang-specific mapping
+--           vim.api.nvim_buf_set_keymap(bufnr, 'n' , '<leader>o', '<cmd>ClangdSwitchSourceHeader<cr>', { noremap=true })
+--           set_lsp_mappings(client, bufnr)
+--           -- require'semantic_tokens'.on_attach(client, buffer)
+--         end
+--       }
+--       vim.lsp.config.pyright = {
+--         on_attach = function (client, bufnr)
+--           set_lsp_mappings(client, bufnr)
+--         end
+--       }
+--       vim.lsp.config.gopls = {
+--         on_attach = function (client, bufnr)
+--           set_lsp_mappings(client, bufnr)
+--         end
+--       }
+--     end
+--   },

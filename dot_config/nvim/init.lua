@@ -11,6 +11,12 @@ require('config.lazy')
 require('config.mappings')
 require('config.file_types')
 
+if not vim.g.vscode then
+  vim.lsp.enable('clangd')
+  vim.lsp.enable('pyright')
+  vim.lsp.enable('gopls')
+end
+
 -- Highlight the current line
 vim.o.cursorline = true
 
