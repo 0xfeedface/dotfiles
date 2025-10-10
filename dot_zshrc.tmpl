@@ -1,3 +1,4 @@
+# vim:ft=zsh
 export EDITOR='nvim'
 export PAGER='less --RAW-CONTROL-CHARS'
 export FZF_DEFAULT_COMMAND='rg --files-with-matches ""'
@@ -10,7 +11,7 @@ export FZF_DEFAULT_OPTS='
 
 setopt histignorealldups incappendhistory sharehistory histreduceblanks histignorespace
 
-{{ if (eq .chezmoi.os "linux") }}
+{{- if (eq .chezmoi.os "linux") }}
 export VAULT_ADDR='https://vault.linguee.internal'
 export ANSIBLE_BECOME_ASK_PASS=False
 export DEEPL_USER=nhzhssh
@@ -29,9 +30,9 @@ setopt autopushd pushdminus pushdsilent pushdtohome
 # Keep N lines of history within the shell and save it to ~/.zsh_history
 HISTSIZE=16384
 SAVEHIST=16384
-HISTFILE=~/.zsh_history
+HISTFILE=~/.local/share/zsh/history
 
-{{ if (eq .chezmoi.os "linux") }}
+{{- if (eq .chezmoi.os "linux") }}
 export -TU LD_LIBRARY_PATH ldlibrarypath
 ldlibrarypath=($ldlibrarypath /usr/local/lib)
 
@@ -40,17 +41,13 @@ path=(~/.cargo/bin $path)
 path=(~/.go/bin $path)
 path=(~/.dotnet/tools $path)
 path=(/home/linuxbrew/.linuxbrew/bin $path)
-path=($(pyenv root)/shims $path)
+## path=($(pyenv root)/shims $path)
 
 export VCPKG_ROOT=~/other/vcpkg
 path=($VCPKG_ROOT $path)
 
 eval "$(dircolors ~/.dircolors)"
-
-alias ls='ls --color=auto'
-alias grep='grep --color=auto'
-alias open='xdg-open > /dev/null 2>&1'
-{{ else if (eq .chezmoi.os "darwin") }}
+{{- else if (eq .chezmoi.os "darwin") }}
 path=($HOMEBREW_PREFIX/opt/llvm/bin $path)
 
 chflags nohidden ~/Library/
@@ -62,100 +59,19 @@ chflags nohidden ~/Library
 export LANG=en_US.UTF-8
 {{ end }}
 
-# Generic alias definitions
-alias gti=git
-alias ll=' ls -ahlF'
-alias la=' ls -A'
-alias l=' ls -CF'
-alias c=' reset && clear'
-alias cm='chezmoi'
-alias tmux='tmux -u'
-alias d='dirs -v'
-
-{{ if (eq (index .chezmoi.osRelease "id") "arch") }}
-alias pacman='pacman --color=auto'
-{{ end }}
-
 # Load color definition shortcuts
 autoload -Uz colors && colors
 
-# Use modern completion system
-autoload -Uz compinit && compinit
-
-zstyle ':completion:*' auto-description 'specify: %d'
-zstyle ':completion:*' completer _expand _complete _correct _approximate
-zstyle ':completion:*:approximate:*' max-errors 3
-zstyle ':completion:*' format 'Completing %d'
-zstyle ':completion:*' group-name ''
-zstyle ':completion:*' menu select=1
-zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
-zstyle ':completion:*' list-colors ''
-zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character to insert%s
-zstyle ':completion:*' use-compctl false
-zstyle ':completion:*' verbose true
-
-zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
-zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
-
-zstyle ':completion:*:messages' format '%F{2} -- %d -- %F{14}'
-zstyle ':completion:*:messages' format "%F{2} -- %d -- %F{14}"
-zstyle ':completion:*:warnings' format "%F{1} -- no matches found -- %F{14}"
-zstyle ':completion:*:descriptions' format "%F{2} -- %d -- %F{14}"
-zstyle ':completion:*:corrections' format "%F{2} -- %d -- %F{14}"
-
-{{ if (eq .chezmoi.os "linux") }}
-# zsh parameter completion for the dotnet CLI
-_dotnet_zsh_complete() {
-  local completions=("$(dotnet complete "$words")")
-
-  # If the completion list is empty, just continue with filename selection
-  if [ -z "$completions" ]
-  then
-    _arguments '*::arguments: _normal'
-    return
-  fi
-
-  # This is not a variable assignment, don't remove spaces!
-  _values = "${(ps:\n:)completions}"
-}
-compdef _dotnet_zsh_complete dotnet
-
-source <(kubectl completion zsh)
-{{ end }}
-
-autoload -Uz vcs_info
-autoload -Uz promptinit && promptinit
-setopt prompt_subst
-zstyle ':vcs_info:*' enable git hg svn
-zstyle ':vcs_info:*' formats       '%F{14}[%F{4}%b%F{14}]%f'
-zstyle ':vcs_info:*' actionformats '%F{14}[%F{4}%b%F{14}%F{14}] (%F{9}%a%F{14})%f'
-
-precmd () { vcs_info }
-PROMPT="%F{6}%~%F{14} %# "
-RPS1=' '
-RPROMPT='${vcs_info_msg_0_}'
-
-# Emacs key bindings
-bindkey -e
-WORDCHARS='*?.[]~&!#$%^(){}<>-'
-
-# Vim keybindings for zle
-## bindkey -v
-# Shoster timeout when switching to normal mode
-## export KEYTIMEOUT=10
-# Still use Emacs bindings for history search
-## bindkey '^r' history-incremental-search-backward
-## bindkey ';5C' forward-word
-## bindkey ';5D' backward-word
-## WORDCHARS='*?.[]~&!#$%^(){}<>'
-## VIM_MODE_VICMD_KEY='^B'
-## [ -f ~/.local/share/zsh/vim-mode/zsh-vim-mode.plugin.zsh ] && source ~/.local/share/zsh/vim-mode/zsh-vim-mode.plugin.zsh
-
-export PYENV_ROOT="$(pyenv root)"
-eval "$(pyenv init -)"
+## export PYENV_ROOT="$(pyenv root)"
+## eval "$(pyenv init -)"
 
 # Fix Poetry
 export PYTHON_KEYRING_BACKEND=keyring.backends.fail.Keyring
+
+[ -f ~/.config/zsh/aliases.zsh ] && source ~/.config/zsh/aliases.zsh
+[ -f ~/.config/zsh/bindings.zsh ] && source ~/.config/zsh/bindings.zsh
+[ -f ~/.config/zsh/completion.zsh ] && source ~/.config/zsh/completion.zsh
+[ -f ~/.config/zsh/prompt.zsh ] && source ~/.config/zsh/prompt.zsh
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 [ -f ~/.pyenv.zsh ] && source ~/.pyenv.zsh

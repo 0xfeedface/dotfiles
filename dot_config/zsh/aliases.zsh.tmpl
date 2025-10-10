@@ -1,0 +1,20 @@
+# vim:ft=zsh
+
+# Generic alias definitions
+alias gti=git
+alias ls='ls --color=auto'
+alias grep='grep --color=auto'
+alias ll=' ls -ahlF'
+alias la=' ls -A'
+alias l=' ls -CF'
+alias c=' reset && clear'
+alias cm='chezmoi'
+alias d='dirs -v'
+
+{{ if (eq (index .chezmoi.osRelease "id") "arch") }}
+alias pacman='pacman --color=auto'
+{{ end }}
+
+{{ if (eq .chezmoi.os "linux") }}
+alias open='xdg-open > /dev/null 2>&1'
+{{ end }}
