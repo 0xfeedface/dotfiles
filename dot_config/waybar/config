@@ -33,18 +33,18 @@
     },
     "memory": {
         "interval": 3,
-        "format": "{} % ",
+        "format": "{}\u2009% ",
         "max-length": 10
     },
     "cpu": {
         "interval": 3,
-        "format": "{} % ",
+        "format": "{}\u2009% ",
         "max-length": 10
     },
     "network": {
         "interval": 10,
         "format": "{ifname}",
-        "format-wifi": "{ipaddr} ({signalStrength}%) ",
+        "format-wifi": "{ipaddr} ({signalStrength}\u2009%) ",
         "format-ethernet": "{ipaddr} ",
         // An empty format will hide the module.
         "format-disconnected": "no link",
@@ -52,12 +52,12 @@
         "family": "ipv4"
     },
     "battery": {
-        "format": "{capacity} % {icon}",
+        "format": "{capacity}\u2009% {icon}",
         "format-icons": ["", "", "", "", ""]
     },
     "temperature": {
         "critical-threshold": 80,
-        "format": "{temperatureC} °C {icon}",
+        "format": "{temperatureC}\u2009°C {icon}",
         "format-icons": ["", "", ""],
         "tooltip": false
     },
