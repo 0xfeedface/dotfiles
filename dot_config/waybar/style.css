@@ -18,8 +18,8 @@
 * {
     border: none;
     font-family: Iosevka Fixed, Roboto, Helvetica, Arial, sans-serif;
-    font-size: 11pt;
-    min-height: 22px;
+    font-size: 12pt;
+    min-height: 24px;
 }
 
 window#waybar {
@@ -32,7 +32,6 @@ window#waybar {
     padding: 0 5px;
     color: @S_base3;
     background: @S_base_3;
-    /* border-bottom: 3px solid transparent; */
     border-bottom: 3px solid @S_base_2;
     border-radius: 0;
 }
@@ -62,6 +61,8 @@ window#waybar {
     margin: 0 5px;
     opacity: 0.8;
     border-radius: 0;
+    padding-top: 2px;
+    margin-top: 0;
 }
 
 #window,
