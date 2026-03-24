@@ -21,7 +21,7 @@ typeset -U fpath
 fpath=(~/.zfunc $fpath)
 
 setopt autocd
-cdpath=($HOME/deepl/repos)
+cdpath=($HOME/Work/Repos)
 {{ end }}
 
 DIRSTACKSIZE=8
@@ -36,15 +36,14 @@ HISTFILE=~/.local/share/zsh/history
 export -TU LD_LIBRARY_PATH ldlibrarypath
 ldlibrarypath=($ldlibrarypath /usr/local/lib)
 
+export GOPATH=~/.local/share/go
+
 path=(~/.local/bin $path)
 path=(~/.cargo/bin $path)
-path=(~/.go/bin $path)
+path=($GOPATH/bin $path)
 path=(~/.dotnet/tools $path)
 path=(/home/linuxbrew/.linuxbrew/bin $path)
 ## path=($(pyenv root)/shims $path)
-
-export VCPKG_ROOT=~/other/vcpkg
-path=($VCPKG_ROOT $path)
 
 eval "$(dircolors ~/.dircolors)"
 {{- else if (eq .chezmoi.os "darwin") }}

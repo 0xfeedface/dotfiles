@@ -9,6 +9,7 @@ alias la=' ls -A'
 alias l=' ls -CF'
 alias c=' reset && clear'
 alias cm='chezmoi'
+alias cea='chezmoi edit --apply'
 alias d='dirs -v'
 
 {{ if (eq (index .chezmoi.osRelease "id") "arch") }}
