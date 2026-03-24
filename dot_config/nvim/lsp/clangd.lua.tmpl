@@ -1,4 +1,26 @@
 -- vim: filetype=lua
+
+-- https://clangd.llvm.org/extensions.html#switch-between-sourceheader
+local function switch_source_header(bufnr, client)
+  local method_name = 'textDocument/switchSourceHeader'
+  ---@diagnostic disable-next-line:param-type-mismatch
+  if not client or not client:supports_method(method_name) then
+    return vim.notify(('method %s is not supported by any servers active on the current buffer'):format(method_name))
+  end
+  local params = vim.lsp.util.make_text_document_params(bufnr)
+  ---@diagnostic disable-next-line:param-type-mismatch
+  client:request(method_name, params, function(err, result)
+    if err then
+      error(tostring(err))
+    end
+    if not result then
+      vim.notify('corresponding file cannot be determined')
+      return
+    end
+    vim.cmd.edit(vim.uri_to_fname(result))
+  end, bufnr)
+end
+
 return {
 {{- if eq .chezmoi.os "linux" }}
   cmd = { '/usr/lib/llvm19/bin/clangd' },
@@ -13,33 +35,26 @@ return {
     textDocument = {
       semanticHighLightingCapabilities = {
         semanticHighLighting = false
+      },
+      completion = {
+        editsNearCursor = true
       }
-    }
+    },
+    offsetEncoding = { 'utf-8', 'utf-16' }
   },
+  on_init = function(client, init_result)
+    if init_result.offsetEncoding then
+      client.offset_encoding = init_result.offsetEncoding
+    end
+  end,
+  on_attach = function(client, bufnr)
+    vim.api.nvim_buf_create_user_command(bufnr, 'LspClangdSwitchSourceHeader', function()
+      switch_source_header(bufnr, client)
+    end, { desc = 'Switch between source/header' })
+    vim.keymap.set('n', '<leader>o', '<cmd>LspClangdSwitchSourceHeader<cr>', { noremap = true, silent = true })
+    vim.api.nvim_buf_create_user_command(bufnr, 'LspFormatDocument', function()
+      vim.lsp.buf.format()
+    end, { desc = 'Switch between source/header' })
+    vim.keymap.set('n', '<leader>Q', '<cmd>LspFormatDocument<cr>', { noremap = true, silent = true })
+  end,
 }
-
---   {
---     'neovim/nvim-lspconfig',
---     config = function()
---       local util = 'lspconfig.util'
---       vim.lsp.config.clangd = {
---         root_dir = util.root_pattern('compile_commands.json'),
---         on_attach = function (client, bufnr)
---           -- Set clang-specific mapping
---           vim.api.nvim_buf_set_keymap(bufnr, 'n' , '<leader>o', '<cmd>ClangdSwitchSourceHeader<cr>', { noremap=true })
---           set_lsp_mappings(client, bufnr)
---           -- require'semantic_tokens'.on_attach(client, buffer)
---         end
---       }
---       vim.lsp.config.pyright = {
---         on_attach = function (client, bufnr)
---           set_lsp_mappings(client, bufnr)
---         end
---       }
---       vim.lsp.config.gopls = {
---         on_attach = function (client, bufnr)
---           set_lsp_mappings(client, bufnr)
---         end
---       }
---     end
---   },

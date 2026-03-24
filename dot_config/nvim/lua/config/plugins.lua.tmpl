@@ -1,3 +1,4 @@
+-- vim: ft=lua
 local set_lsp_mappings = function(client, bufnr)
   -- vim.api.nvim_buf_set_keymap(bufnr, 'n' , 'gd', '<cmd>lua vim.lsp.buf.definition()<cr>', { noremap=true })
   vim.api.nvim_buf_set_keymap(bufnr, 'n' , 'gd', '<cmd>lua require("telescope.builtin").lsp_definitions()<cr>', { noremap=true })
@@ -29,6 +30,15 @@ local set_lsp_mappings = function(client, bufnr)
 end
 
 return {
+  {
+    'filipjanevski/0x96f.nvim',
+    priority = 1000,
+    enabled = true,
+    config = function()
+      require("0x96f").setup()
+      vim.cmd.colorscheme("0x96f")
+    end,
+  },
   {
     'Tsuzat/NeoSolarized.nvim',
     enabled = false,
@@ -159,22 +169,6 @@ return {
     end
   },
   {
-    dir = (is_mac() and '~/Code/' or '~/other/') .. 'NeoSolarized',
-    enabled = true,
-    cond = not vim.g.vscode,
-    lazy = false,
-    priority = 1000,
-    init = function()
-      vim.g.neosolarized_contrast = 'high'
-      vim.g.neosolarized_visibility = 'low'
-      vim.g.neosolarized_bold = 0
-      vim.g.neosolarized_italic = 1
-    end,
-    config = function()
-      vim.cmd[[colorscheme NeoSolarized]]
-    end,
-  },
-  {
     'morhetz/gruvbox',
     cond = not vim.g.vscode,
     enabled = false,
@@ -262,6 +256,7 @@ return {
       config.setup({
         defaults = {
           layout_strategy = 'vertical',
+          path_display = { 'shorten' },
           mappings = {
             i = {
               ["<C-e>"] = "move_selection_previous",
@@ -287,6 +282,16 @@ return {
       vim.keymap.set('n', '<leader>tg', builtin.live_grep, { noremap = true, silent = true })
       vim.keymap.set('n', '<leader>tb', builtin.buffers, { noremap = true, silent = true })
       vim.keymap.set('n', '<leader>th', builtin.help_tags, { noremap = true, silent = true })
+
+      -- TODO: move to lsp-specific initialization
+      vim.keymap.set('n', '<leader>gd', builtin.lsp_definitions, { noremap = true, silent = true })
+      -- vim.keymap.set('n', '<leader>gds', builtin.lsp_definitions({ jump_type = "split" }), { noremap = true, silent = true })
+      vim.keymap.set('n', '<leader>gD', vim.lsp.buf.declaration, { noremap = true, silent = true })
+      vim.keymap.set('n', '<leader>K', vim.lsp.buf.hover, { noremap = true, silent = true })
+      vim.keymap.set('n', '<leader>gi', builtin.lsp_implementations, { noremap = true, silent = true })
+      vim.keymap.set('n', '<leader>gs', vim.lsp.buf.signature_help, { noremap = true, silent = true })
+      vim.keymap.set('n', '<leader>gr', builtin.lsp_references, { noremap = true, silent = true })
+      vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, { noremap = true, silent = true })
     end,
   },
   {
@@ -295,6 +300,7 @@ return {
   },
   {
     'mikesmithgh/kitty-scrollback.nvim',
+    cond = not vim.g.vscode,
     enabled = true,
     lazy = true,
     cmd = { 'KittyScrollbackGenerateKittens', 'KittyScrollbackCheckHealth', 'KittyScrollbackGenerateCommandLineEditing' },
@@ -397,4 +403,8 @@ return {
     enabled = not is_mac(),
     cond = not vim.g.vscode,
   },
+  {
+    'towolf/vim-helm',
+    cond = not vim.g.vscode
+  }
 }

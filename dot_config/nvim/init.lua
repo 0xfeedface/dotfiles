@@ -13,7 +13,8 @@ require('config.file_types')
 
 if not vim.g.vscode then
   vim.lsp.enable('clangd')
-  vim.lsp.enable('pyright')
+  -- vim.lsp.enable('pyright')
+  vim.lsp.enable('ruff')
   vim.lsp.enable('gopls')
 end
 
