@@ -1,0 +1,23 @@
+background = 262427
+foreground = fcfcfa
+selection-background = fcfcfa
+selection-foreground = 262427
+cursor-color = ffca58
+
+palette = 0=#262427
+palette = 1=#ff4c59
+palette = 2=#82a102
+palette = 3=#b88e01
+palette = 4=#1c96fe
+palette = 5=#ff3e95
+palette = 6=#03a892
+palette = 7=#fcfcfa
+
+palette = 8=#262427
+palette = 9=#ef6701
+palette = 10=#8201a2
+palette = 11=#b8be01
+palette = 12=#1c96fe
+palette = 13=#9a7eff
+palette = 14=#03a892
+palette = 15=#fcfcfa

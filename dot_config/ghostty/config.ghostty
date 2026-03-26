@@ -1,0 +1,13 @@
+# vim: ft=conf
+font-family = "Iosevka Custom Fixed Slab"
+font-style = Medium
+font-size = 18
+#theme = 0x96f
+unfocused-split-opacity = 1
+# window-colorspace = display-p3
+# config-file = theme.ghostty
+# config-file = solarized.ghostty
+# theme = "iTerm2 Solarized Dark"
+theme = "One Half Dark"
+adjust-cursor-thickness = 2
+# minimum-contrast = 1.1
