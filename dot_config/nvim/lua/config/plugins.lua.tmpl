@@ -31,6 +31,47 @@ end
 
 return {
   {
+    'Shatur/neovim-ayu',
+    priority = 1000,
+    enabled = true,
+    config = function()
+      local use_mirage = false
+      local colors = require('ayu.colors')
+      colors.generate(use_mirage)
+      require'ayu'.setup{
+        mirage = use_mirage,
+        terminal = true,
+        overrides = {
+          Comment = { italic = false },
+          -- Statement = { fg = '#f48da4' },
+          Statement = { fg = '#f795c5' },
+          Statement = { fg = '#f69ad4' },
+          -- Special = { fg = '#f28779' },
+          Special = { fg = '#f07171' },
+          LineNr = { fg = colors.comment },
+
+          ['@lsp'] = {},
+          ['@lsp.type.parameter'] = { fg = colors.fg },
+
+          ['@type.builtin'] = { link = '@type' },
+
+          ['@variable'] = { fg = colors.spell },
+          ['@variable.builtin'] = { fg = colors.spell },
+          ['@variable.member'] = { fg = colors.spell },
+          ['@variable.parameter'] = { fg = colors.spell },
+
+          ['@keyword.import'] = { fg = colors.special },
+          ['@keyword.directive'] = { fg = colors.special },
+
+          ['@function'] = { fg = colors.fg },
+          ['@module'] = { fg = colors.fg },
+          ['@spell'] = { fg = colors.spell },
+        }
+      }
+      vim.cmd.colorscheme('ayu')
+    end
+  },
+  {
     'filipjanevski/0x96f.nvim',
     priority = 1000,
     enabled = true,
