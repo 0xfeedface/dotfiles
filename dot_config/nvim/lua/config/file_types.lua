@@ -31,7 +31,7 @@ autocmd('FileType', {
 
 augroup('wrapped', { clear = true })
 autocmd('FileType', {
-  pattern = { 'tex' },
+  pattern = { 'tex', 'markdown' },
   callback = function()
     vim.opt_local.wrap = true
   end,
@@ -57,4 +57,13 @@ autocmd('FileType', {
     vim.o.expandtab = false
   end,
   group = 'tabs'
+})
+
+augroup('treesitter', { clear = true })
+autocmd('FileType', {
+  pattern = { 'c', 'lua', 'markdown', 'query', 'vim', 'cpp', 'python', 'rust', 'go', 'zig', 'cs' },
+  callback = function()
+    vim.treesitter.start()
+  end,
+  group = 'treesitter'
 })

@@ -34,6 +34,7 @@ return {
     'Shatur/neovim-ayu',
     priority = 1000,
     enabled = true,
+    lazy = false,
     config = function()
       local use_mirage = false
       local colors = require('ayu.colors')
@@ -70,15 +71,6 @@ return {
       }
       vim.cmd.colorscheme('ayu')
     end
-  },
-  {
-    'filipjanevski/0x96f.nvim',
-    priority = 1000,
-    enabled = true,
-    config = function()
-      require("0x96f").setup()
-      vim.cmd.colorscheme("0x96f")
-    end,
   },
   {
     'Tsuzat/NeoSolarized.nvim',
@@ -210,87 +202,40 @@ return {
     end
   },
   {
-    'morhetz/gruvbox',
-    cond = not vim.g.vscode,
-    enabled = false,
-    lazy = false,
-    priority = 1000,
-    init = function()
-      vim.g.gruvbox_contrast_dark = 'medium'
-      vim.g.gruvbox_italicize_comments = 0
-      vim.g.gruvbox_bold = 0
-    end,
-    config = function()
-      vim.cmd[[colorscheme gruvbox]]
-    end
-  },
-  {
     'nvim-treesitter/nvim-treesitter',
     cond = not vim.g.vscode,
+    lazy = false,
     build = ':TSUpdate',
     config = function()
-      local configs = require('nvim-treesitter.configs')
-      configs.setup{
-        ensure_installed = { 'c', 'cpp', 'python', 'vim', 'lua', 'comment' },
-        highlight = { enable = true },
-        incremental_selection = { enable = true },
-        indent = { enable = true },
-        textobjects = {
-          move = {
-            enable = true,
-            set_jumps = true, -- whether to set jumps in the jumplist
-            goto_next_start = {
-              [']d'] = '@function.outer',
-              [']c'] = '@class.outer',
-            },
-            goto_next_end = {
-              [']D'] = '@function.outer',
-              [']C'] = '@class.outer',
-            },
-            goto_previous_start = {
-              ['[d'] = '@function.outer',
-              ['[c'] = '@class.outer',
-            },
-            goto_previous_end = {
-              ['[D'] = '@function.outer',
-              ['[C'] = '@class.outer',
-            },
-          },
-          select = {
-            enable = true,
-            lookahead = true,
-            keymaps = {
-              ['af'] = '@function.outer',
-              ['if'] = '@function.inner',
-            },
-          },
-          lsp_interop = {
-            enable = true,
-            border = 'none',
-            peek_definition_code = {
-              ["<leader>df"] = "@function.outer",
-              ["<leader>dF"] = "@class.outer",
-            },
-          },
-        },
+      local treesitter = require'nvim-treesitter'
+      treesitter.setup{
+        treesitter.install{ 'cpp', 'python', 'rust', 'go', 'zig', 'c_sharp' }
       }
-      opts = {
-      }
+      --   ensure_installed = { 'c', 'cpp', 'python', 'vim', 'lua', 'comment' },
+      --   highlight = { enable = true },
+      --   incremental_selection = { enable = true },
+      --   indent = { enable = true },
+      -- }
+      -- opts = {
+      -- }
     end,
-  },
-  {
-    'nvim-treesitter/playground',
-    cond = not vim.g.vscode
   },
   {
     'nvim-treesitter/nvim-treesitter-textobjects',
+    enabled = false,
     cond = not vim.g.vscode
   },
   {
     'nvim-telescope/telescope.nvim',
+    version = '*',
     cond = not vim.g.vscode,
-    tag = '0.1.8',
-    dependencies = { 'nvim-lua/plenary.nvim' },
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      {
+        'nvim-telescope/telescope-fzy-native.nvim',
+        build = 'make'
+      }
+    },
     config = function()
       -- Setup
       local config = require'telescope'
@@ -340,6 +285,10 @@ return {
     cond = not vim.g.vscode
   },
   {
+    'neovim/nvim-lspconfig',
+    cond = not vim.g.vscode
+  },
+  {
     'mikesmithgh/kitty-scrollback.nvim',
     cond = not vim.g.vscode,
     enabled = true,
@@ -361,10 +310,12 @@ return {
   },
   {
     'hrsh7th/cmp-nvim-lsp',
+    enalbed = false,
     cond = not vim.g.vscode
   },
   {
     'hrsh7th/nvim-cmp',
+    enalbed = false,
     cond = not vim.g.vscode,
     config = function()
       local cmp = require'cmp'

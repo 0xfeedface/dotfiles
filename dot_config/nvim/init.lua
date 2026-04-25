@@ -16,6 +16,8 @@ if not vim.g.vscode then
   -- vim.lsp.enable('pyright')
   vim.lsp.enable('ruff')
   vim.lsp.enable('gopls')
+  vim.lsp.enable('csharp-ls')
+  vim.lsp.enable('zls')
 end
 
 -- Highlight the current line
