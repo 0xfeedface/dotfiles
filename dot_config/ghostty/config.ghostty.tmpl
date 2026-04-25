@@ -1,13 +1,15 @@
 # vim: ft=conf
 font-family = "Iosevka Custom Fixed Slab"
+{{ if eq .chezmoi.os "darwin" }}
 font-style = Medium
 font-size = 18
-#theme = 0x96f
+macos-option-as-alt = right
+{{ end }}
 unfocused-split-opacity = 1
+adjust-cursor-thickness = 2
 # window-colorspace = display-p3
 # config-file = theme.ghostty
 # config-file = solarized.ghostty
 # theme = "iTerm2 Solarized Dark"
-theme = "One Half Dark"
-adjust-cursor-thickness = 2
+theme = Ayu
 # minimum-contrast = 1.1
